@@ -4,8 +4,8 @@
         public function __construct()
         {
             parent::__construct();
+            $this->session->set_userdata('return_url', current_url());
             if (!$this->session->userdata('logged_in')) {
-                $this->session->set_userdata('return_url', current_url());
                 redirect('/Authentication', 'location');
             }
         }

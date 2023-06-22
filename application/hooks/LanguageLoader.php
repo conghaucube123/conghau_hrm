@@ -5,12 +5,11 @@
         {
             $ci =& get_instance();
             $ci->load->helper('language');
-            $ci->load->helper('cookie');
-            $siteLang = get_cookie('language');
+            $siteLang = $ci->session->userdata('site_lang');
             if ($siteLang) {
-                $ci->lang->load('all', $siteLang);
+                $ci->lang->load(['message', 'title', 'status'], $siteLang);
             } else {
-                $ci->lang->load('all', 'english');
+                $ci->lang->load(['message', 'title', 'status'], 'english');
             }
         }
     }

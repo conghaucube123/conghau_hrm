@@ -18,25 +18,22 @@
         public function list($message = [])
         {
             // Set data to load User list view
-            $data['header'] = 'component/header';
-            $data['footer'] = 'component/footer';
-            $data['sidebar'] = 'component/sidebar';
-            $data = array_merge($data, $message);
+            $content = $this->load->view('user_list/user_list', $message ,true);
             
             // View User list screen
-            $this->load->view('user_list/user_list', $data);
+            $this->load->view('master_page', ['content' => $content]);
         }
 
         /**
          * Filter data for datatable
          */
-        public function filterData($data = [])
+        public function filterUserListData($data = [])
         {
             $draw = (int)($this->input->post("draw"));
             $columnOrder = ['login_id', 'gender', 'name', 'email', 'employee_id', 'image','status',] ;
             $order = $columnOrder[(int)$this->input->post('order[0][column]')];
             $dir = $this->input->post('order[0][dir]');
-            $recordsTotal = count($this->Profile_model->getSearch());
+            $recordsTotal = count($this->Profile_model->getProfilesSearch());
             $dataSearch = [
                 'employeeId' => trim($this->input->post('employeeId')),
                 'name' => trim($this->input->post('name')),
@@ -44,7 +41,7 @@
                 'available' => $this->input->post('available'),
                 'unavailable' => $this->input->post('unavailable'),
             ];
-            $recordsFilter = count($this->Profile_model->getSearch($dataSearch));
+            $recordsFilter = count($this->Profile_model->getProfilesSearch($dataSearch));
             $dataFilter = [
                 'order' => $dir,
                 'orderBy' => $order,
@@ -52,7 +49,10 @@
                 'offset' => (int)$this->input->post('start'),
             ];
             $data = array_merge($dataSearch, $dataFilter);
-            $profiles = $this->Profile_model->getSearch($data);
+            $profiles = $this->Profile_model->getProfilesSearch($data);
+            $positions = $this->Position_model->getPosition();
+            $departments = $this->Department_model->getDepartment();
+            $contractTypes = $this->Contract_type_model->getContractType();
             $dataResult = [];
             foreach ($profiles as $profile) {
                 $temp = [];
@@ -65,13 +65,33 @@
                 $temp['fullname'] = $profile['name'];
                 $temp['email'] = $profile['email'];
                 $temp['employeeId'] = $profile['employee_id'];
-                $temp['image'] = '';
+                $temp['image'] = $profile['image'];
                 if ($profile['status'] === '1') {
                     $temp['status'] = 'Available';
                 } else {
                     $temp['status'] = 'Unavailable';
                 }
                 $temp['id'] = $profile['profile_id'];
+                $temp['recentLogin'] = $profile['recent_login'];
+                $temp['createdTime'] = $profile['created_time'];
+                $temp['createdUser'] = $profile['created_user'];
+                $temp['mobile'] = $profile['mobile'];
+                $temp['birthday'] = $profile['birthday'];
+                foreach ($positions as $position) {
+                    if ($profile['position_id'] === $position['id']) {
+                        $temp['position'] = $position['name'];
+                    }
+                }
+                foreach ($departments as $department) {
+                    if ($profile['department_id'] === $department['id']) {
+                        $temp['department'] = $department['name'];
+                    }
+                }
+                foreach ($contractTypes as $contractType) {
+                    if ($profile['contract_type_id'] === $contractType['id']) {
+                        $temp['contractType'] = $contractType['name'];
+                    }
+                }
                 $dataResult[] = $temp;
             }
             $result = [
@@ -82,6 +102,8 @@
             ];
             echo json_encode($result);
         }
+
+
 
         /**
          * Image check
@@ -98,25 +120,25 @@
                 'imageType' => '',
                 'imageExist' => '',
             ];
-            
-            //Check image size
-            if ($_FILES['avatar']['size'] > 10485760) {
-                $error['imageSize'] = "The image can not be over 5MB";
-                $error['flag'] = TRUE;
-            }
-            
-            // Check image extension
-            $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
-            $file_type_allow = array('png', 'jpg', 'jpeg', 'gif');
-            if (!in_array(strtolower($file_type), $file_type_allow)) {
-                $error['imageType'] = "The image extension is not right.";
-                $error['flag'] = TRUE;
-            }
-            
-            // Check image exist
-            if (file_exists($target_file)) {
-                $error['imageExist'] = "The image name is already exist in this server.";
-                $error['flag'] = TRUE;
+            if (!empty($target_file)) {
+                //Check image size
+                if ($_FILES['avatar']['size'] > 10485760) {
+                    $error['imageSize'] = lang('IMAGE002');
+                    $error['flag'] = TRUE;
+                }
+                
+                // Check image extension
+                $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
+                $file_type_allow = ['png', 'jpg', 'jpeg', 'gif'];
+                if (!in_array(strtolower($file_type), $file_type_allow)) {
+                    $error['imageType'] = lang('IMAGE003');
+                    $error['flag'] = TRUE;
+                }
+                
+                // Check image exist
+                if (file_exists($target_file)) {
+                    $error['imageExist'] = lang('IMAGE004');
+                }
             }
 
             return $error;
@@ -141,7 +163,7 @@
                 if ($this->User_model->getUser(['loginId' => $data['loginId'],])) {
                     $user = $this->User_model->getUser(['loginId' => $data['loginId'],]);
                     if (strcasecmp($user['profile_id'], $data['id']) != 0) {
-                        $error['loginId'] = "Login ID is used";
+                        $error['loginId'] = lang('LOGINID004');
                         $error['flag'] = TRUE;
                     }
                 }
@@ -150,7 +172,7 @@
                 if ($this->Profile_model->getProfile(['email' => $data['email'],])) {
                     $profile = $this->Profile_model->getProfile(['email' => $data['email'],]);
                     if (strcasecmp($profile['id'], $data['id']) != 0) {
-                        $error['email'] = "Email is used";
+                        $error['email'] = lang('EMAIL004');
                         $error['flag'] = TRUE;
                     }
                 }
@@ -159,7 +181,7 @@
                 if ($this->Profile_model->getProfile(['employeeId' => $data['employeeId'],])) {
                     $profile = $this->Profile_model->getProfile(['employeeId' => $data['employeeId'],]);
                     if (strcasecmp($profile['id'], $data['id']) != 0) {
-                        $error['employeeId'] = "Employee ID is used";
+                        $error['employeeId'] = lang('EMPLOYEEID004');
                         $error['flag'] = TRUE;
                     }
                 }
@@ -173,32 +195,29 @@
          * 
          * @param array error of data if any
          */
-        private function showEditView($error = [])
+        private function showEditView($id = '', $error = [])
         {
             // Set data to view Edit screen
-            $id = trim($this->uri->segment('3'));
             $data['positions'] = $this->Position_model->getPosition();
             $data['departments'] = $this->Department_model->getDepartment();
             $data['contractTypes'] = $this->Contract_type_model->getContractType();
             $data['profile'] = $this->Profile_model->getProfile(['id' => $id,]);
-            $data['user'] = $this->User_model->getUser(['profileId' => $id]);
-            $data['header'] = 'component/header';
-            $data['footer'] = 'component/footer';
-            $data['sidebar'] = 'component/sidebar';
+            $data['user'] = $this->User_model->getUser(['profileId' => $id,]);
             $data = array_merge($data, $error);
+            $content = $this->load->view('user_list/edit', $data ,true);
             
             // View Edit screen
-            $this->load->view('user_list/edit', $data);
+            $this->load->view('master_page', ['content' => $content]);
         }
 
         /**
          * Edit features
          */
-        public function edit()
+        public function edit($id = '')
         {
             $error = [];
-            if (!$this->input->post('edit-submit')) {
-                $this->showEditView();
+            if (!$this->input->post('email')) {
+                $this->showEditView($id);
 
                 return;
             }
@@ -206,7 +225,7 @@
             // Handle image
             $target_file = '';
             $file_name = '';
-            if(!empty($_FILES['avatar'])) {
+            if(!empty($_FILES['avatar']['name'])) {
                 // Create image link
                 $target_dir = "C:/xampp/htdocs/conghau_hrm/public/images/";
                 $target_file = $target_dir . basename($_FILES['avatar']['name']);
@@ -214,8 +233,7 @@
                 
             }
             
-            // Draw input data
-            $id = trim($this->uri->segment('3'));
+            // Drawl input data
             $dataProfile = [
                 'id' => $id,
                 'name' => trim($this->input->post('fullname')),
@@ -250,7 +268,7 @@
                 'mobiler' => $dataProfile['mobile'],
                 'statusr' => $dataProfile['status'],
                 'genderr' => $dataProfile['gender'],
-                // 'imager' => $_FILES['avatar'],
+                'imager' => $_FILES['avatar'],
             ];
             $error = array_merge($error, $returnData);
 
@@ -258,8 +276,9 @@
             if (!$imageError['flag']) {
                 move_uploaded_file($_FILES['avatar']['tmp_name'], $target_file);
             } else {
+                $error['im'] = $_FILES['avatar'];
                 $error = array_merge($error, $imageError);
-                $this->showEditView($error);
+                $this->showEditView($id, $error);
 
                 return;
             }
@@ -274,7 +293,7 @@
             // Return error if any
             if ($dataError['flag']) {
                 $error = array_merge($error, $dataError);
-                $this->showEditView($error);
+                $this->showEditView($id, $error);
 
                 return;
             }
@@ -285,8 +304,9 @@
                 $this->User_model->updateUser($dataUser);
                 $this->Profile_model->updateProfile($dataProfile);
                 $this->db->trans_complete();
-                $data['message'] = 'Update successfully!';
-                $this->showEditView($data);
+                $loginId = $this->User_model->getUser(['profileId' => $id,])['login_id'];
+                $data['message'] = lang('update_user') .' '. $loginId .' '. lang('success');
+                $this->showEditView($id, $data);
             } catch (Exception $e) {
                 echo $e;
                 $this->db->trans_rollback();
@@ -294,30 +314,28 @@
         }
 
         /**
-         * Create screen
+         * Add screen
          * 
          * @param array error of data if any
          */
-        private function showCreateView($error = [])
+        private function showAddView($error = [])
         {
-            // Set data to view Create screen
+            // Set data to view Add screen
             $data['positions'] = $this->Position_model->getPosition();
             $data['departments'] = $this->Department_model->getDepartment();
             $data['contractTypes'] = $this->Contract_type_model->getContractType();
-            $data['header'] = 'component/header';
-            $data['footer'] = 'component/footer';
-            $data['sidebar'] = 'component/sidebar';
             $data = array_merge($data, $error);
-
-            // View Create screen
-            $this->load->view('user_list/create', $data);
+            $content = $this->load->view('user_list/add', $data ,true);
+            
+            // View Add screen
+            $this->load->view('master_page', ['content' => $content]);
         }
 
-        public function create()
+        public function add()
         {
             $error = [];
-            if (!$this->input->post('create-submit')) {
-                $this->showCreateView();
+            if (!$this->input->post('loginId')) {
+                $this->showAddView();
 
                 return;
             }
@@ -326,7 +344,6 @@
             $target_file = '';
             $file_name = '';
             if(!empty($_FILES['avatar']['name'])) {
-                
                 // Create image link
                 $target_dir = "C:/xampp/htdocs/conghau_hrm/public/images/";
                 $target_file = $target_dir . basename($_FILES['avatar']['name']);
@@ -334,7 +351,7 @@
                 
             }
 
-            // Draw input data
+            // Drawl input data
             $dataProfile = [
                 'employee_id' => trim($this->input->post('employeeId')),
                 'name' => trim($this->input->post('fullname')),
@@ -377,6 +394,7 @@
                 'probationDater' => $dataProfile['probation_date'],
                 'statusr' => $dataProfile['status'],
                 'genderr' => $dataProfile['gender'],
+                'imager' => $_FILES['avatar'],
             ];
             $error = array_merge($error, $returnData);
 
@@ -385,12 +403,12 @@
                 move_uploaded_file($_FILES['avatar']['tmp_name'], $target_file);
             } else {
                 $error = array_merge($error, $imageError);
-                $this->showCreateView($error);
+                $this->showAddView($error);
 
                 return;
             }
             
-            // Check data before update
+            // Check data before add
             $dataCheck = [
                 'id' => '0',
                 'loginId' => $dataUser['login_id'],
@@ -402,22 +420,24 @@
             // Return error if any
             if ($dataError['flag']) {
                 $error = array_merge($error, $dataError);
-                $this->showCreateView($error);
+                $this->showAddView($error);
 
                 return;
             }
             
-            // Create User
+            // Add User
             try {
                 $this->db->trans_start();
-                $profile_id = $this->Profile_model->createProfile($dataProfile);
+                $profile_id = $this->Profile_model->addProfile($dataProfile);
+                $profile = $this->Profile_model->getProfile(['id' => $profile_id,]);
                 $profileId['profile_id'] = $profile_id;
                 $dataUser = array_merge($dataUser, $profileId);
-                $this->User_model->createUser($dataUser);
+                $this->User_model->addUser($dataUser);
                 $this->db->trans_complete();
-                $this->showCreateView(['message' => 'Create successfully!']);
+                $data['message'] = lang('add_user').' '. $profile['employee_id'];
+                $this->showAddView($data);
             } catch (Exception $e) {
-                // echo $e;
+                echo $e;
                 $this->db->trans_rollback();
             }
         }
@@ -427,14 +447,22 @@
          */
         public function delete()
         {
-            $id = trim($this->uri->segment('3'));
             // Delete User
             try {
+                $loginId = trim($this->input->post('login_id'));
+                $dataDelete = [
+                    'id' => trim($this->input->post('id')),
+                    'updateUser' => $this->session->userdata('loginId'),
+                ];
                 $this->db->trans_start();
-                $this->Profile_model->deleteProfile($id);
-                $this->User_model->deleteUser($id);
+                $this->Profile_model->deleteProfile($dataDelete);
+                $this->User_model->deleteUser($dataDelete);
                 $this->db->trans_complete();
-                $this->list(['message' => 'Delete successfully!']);
+                header('Content-Type', 'application/json');
+                echo json_encode([
+                    'success' => true,
+                    'message'=> lang('delete_user') .' '. $loginId .' '. lang('success'),
+                ]);
             } catch (Exception $e) {
                 echo $e;
                 $this->db->trans_rollback();

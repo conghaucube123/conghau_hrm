@@ -3,117 +3,583 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.7/dist/iconify-icon.min.js"></script>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
         
+        <script src="https://cdn.datatables.net/plug-ins/1.13.4/i18n/vi.json"></script>
+        <script src="//cdn.datatables.net/plug-ins/1.13.4/i18n/en-GB.json"></script>
         <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-            html {
-                background-color: #ffffff;
-                color: #000000;
-                font-family: 'Lato', sans-serif;
-                font-size: 15px;
-                text-rendering: optimizeLegibility;
-            }
-            .clearfix::after {
-                clear: both;
-            }
-            /* The side navigation menu */
-            .sidebar {
-                margin-top: 8.2%;
-                padding: 0px;
-                width: 300px;
-                background-color: #f1f1f1;
-                position: fixed;
-                height: 100%;
-                overflow: auto;
+            :root {
+                --font-family-sans-serif: "Open Sans", -apple-system, BlinkMacSystemFont,
+                "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
+                "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
             }
 
-            /* Sidebar links */
-            .sidebar a {
+            *, *::before, *::after {
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+
+            html {
+                font-family: sans-serif;
+                line-height: 1.15;
+                -webkit-text-size-adjust: 100%;
+                -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            }
+
+            nav {
                 display: block;
-                color: black;
-                padding: 16px;
+            }
+
+            body {
+                margin: 0;
+                font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+                Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
+                "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+                font-size: 1rem;
+                font-weight: 400;
+                line-height: 1.5;
+                color: #515151;
+                text-align: left;
+                /* background-color: #e9edf4; */
+            }
+
+            h1, h2, h3, h4, h5, h6 {
+                margin-top: 0;
+                margin-bottom: 0.5rem;
+            }
+
+            p {
+                margin-top: 0;
+                margin-bottom: 1rem;
+            }
+
+            a {
+                color: #3f84fc;
+                text-decoration: none;
+                background-color: transparent;
+            }
+
+            a:hover {
+                color: #0458eb;
+                text-decoration: underline;
+            }
+
+            h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+                font-family: "Nunito", sans-serif;
+                margin-bottom: 0.5rem;
+                font-weight: 500;
+                line-height: 1.2;
+            }
+
+            h1, .h1 {
+                font-size: 2.5rem;
+                font-weight: normal;
+            }
+
+            .card {
+                position: relative;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -webkit-flex-direction: column;
+                -ms-flex-direction: column;
+                flex-direction: column;
+                min-width: 0;
+                word-wrap: break-word;
+                background-color: #fff;
+                background-clip: border-box;
+                border: 1px solid rgba(0, 0, 0, 0.125);
+                border-radius: 0;
+            }
+
+            .card-body {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1 1 auto;
+                -ms-flex: 1 1 auto;
+                flex: 1 1 auto;
+                padding: 1.25rem;
+            }
+
+            .card-header {
+                padding: 0.75rem 1.25rem;
+                margin-bottom: 0;
+                background-color: rgba(0, 0, 0, 0.03);
+                border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+                text-align: center;
+            }
+
+            .dashboard {
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: -ms-flexbox;
+                display: flex;
+                min-height: 100vh;
+            }
+
+            .dashboard-app {
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -webkit-flex-direction: column;
+                -ms-flex-direction: column;
+                flex-direction: column;
+                -webkit-box-flex: 2;
+                -webkit-flex-grow: 2;
+                -ms-flex-positive: 2;
+                flex-grow: 2;
+                margin-top: 84px;
+            }
+
+            .dashboard-content {
+                -webkit-box-flex: 2;
+                -webkit-flex-grow: 2;
+                -ms-flex-positive: 2;
+                flex-grow: 2;
+                padding: 25px;
+            }
+
+            .dashboard-nav {
+                min-width: 238px;
+                position: fixed;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                overflow: auto;
+                background-color: #373193;
+            }
+
+            .dashboard-compact .dashboard-nav {
+                display: none;
+            }
+
+            .dashboard-nav header {
+                min-height: 84px;
+                padding: 8px 27px;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-pack: center;
+                -webkit-justify-content: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+                -webkit-box-align: center;
+                -webkit-align-items: center;
+                -ms-flex-align: center;
+                align-items: center;
+            }
+
+            .dashboard-nav header .menu-toggle {
+                display: none;
+                margin-right: auto;
+            }
+
+            .dashboard-nav header img {
+                border: black 2px solid;
+                width: 40%;
+            }
+
+            .dashboard-nav a {
+                color: #515151;
+            }
+
+            .dashboard-nav a:hover {
                 text-decoration: none;
             }
 
-            /* Active/current link */
-            .sidebar a.active {
-                background-color: #04AA6D;
-                color: white;
+            .dashboard-nav {
+                background-color: #443ea2;
             }
 
-            /* Links on mouse-over */
-            .sidebar a:hover:not(.active) {
-                background-color: #555555;
-                color: white;
+            .dashboard-nav a {
+                color: #fff;
             }
 
-            /* Page content. The value of the margin-left property should match the value of the sidebar's width property */
-            div.content {
-                margin-left: 200px;
-                padding: 1px 16px;
-                height: 1000px;
+            .brand-logo {
+                font-family: "Nunito", sans-serif;
+                font-weight: bold;
+                font-size: 20px;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: -ms-flexbox;
+                display: flex;
+                color: #515151;
+                -webkit-box-align: center;
+                -webkit-align-items: center;
+                -ms-flex-align: center;
+                align-items: center;
             }
 
-            /* On screens that are less than 700px wide, make the sidebar into a topbar */
-            @media screen and (max-width: 700px) {
-                .sidebar {
-                    width: 100%;
-                    height: auto;
-                    position: relative;
+            .brand-logo:focus, .brand-logo:active, .brand-logo:hover {
+                color: #dbdbdb;
+                text-decoration: none;
+            }
+
+            .brand-logo i {
+                color: #d2d1d1;
+                font-size: 27px;
+                margin-right: 10px;
+            }
+
+            .dashboard-nav-list {
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -webkit-flex-direction: column;
+                -ms-flex-direction: column;
+                flex-direction: column;
+            }
+
+            .dashboard-nav-item {
+                min-height: 56px;
+                padding: 8px 20px 8px 70px;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-align: center;
+                -webkit-align-items: center;
+                -ms-flex-align: center;
+                align-items: center;
+                letter-spacing: 0.02em;
+                transition: ease-out 0.5s;
+            }
+
+            .dashboard-nav-item i {
+                width: 36px;
+                font-size: 19px;
+                margin-left: -40px;
+            }
+
+            .dashboard-nav-item:hover {
+                background: rgba(255, 255, 255, 0.04);
+            }
+
+            .active {
+                background: rgba(0, 0, 0, 0.1);
+            }
+
+            .dashboard-nav-dropdown {
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -webkit-flex-direction: column;
+                -ms-flex-direction: column;
+                flex-direction: column;
+            }
+
+            .dashboard-nav-dropdown.show {
+                background: rgba(255, 255, 255, 0.04);
+            }
+
+            .dashboard-nav-dropdown.show > .dashboard-nav-dropdown-toggle {
+                font-weight: bold;
+            }
+
+            .dashboard-nav-dropdown.show > .dashboard-nav-dropdown-toggle:after {
+                -webkit-transform: none;
+                -o-transform: none;
+                transform: none;
+            }
+
+            .dashboard-nav-dropdown.show > .dashboard-nav-dropdown-menu {
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: -ms-flexbox;
+                display: flex;
+            }
+
+            .dashboard-nav-dropdown-toggle:after {
+                content: "";
+                margin-left: auto;
+                display: inline-block;
+                width: 0;
+                height: 0;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-top: 5px solid rgba(81, 81, 81, 0.8);
+                -webkit-transform: rotate(90deg);
+                -o-transform: rotate(90deg);
+                transform: rotate(90deg);
+            }
+
+            .dashboard-nav .dashboard-nav-dropdown-toggle:after {
+                border-top-color: rgba(255, 255, 255, 0.72);
+            }
+
+            .dashboard-nav-dropdown-menu {
+                display: none;
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -webkit-flex-direction: column;
+                -ms-flex-direction: column;
+                flex-direction: column;
+            }
+
+            .dashboard-nav-dropdown-item {
+                min-height: 40px;
+                padding: 8px 20px 8px 70px;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-align: center;
+                -webkit-align-items: center;
+                -ms-flex-align: center;
+                align-items: center;
+                transition: ease-out 0.5s;
+            }
+
+            .dashboard-nav-dropdown-item:hover {
+                background: rgba(255, 255, 255, 0.04);
+            }
+
+            .menu-toggle {
+                position: relative;
+                width: 42px;
+                height: 42px;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-align: center;
+                -webkit-align-items: center;
+                -ms-flex-align: center;
+                align-items: center;
+                -webkit-box-pack: center;
+                -webkit-justify-content: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+                cursor: pointer;
+                color: #443ea2;
+            }
+
+            .menu-toggle:hover, .menu-toggle:active, .menu-toggle:focus {
+                text-decoration: none;
+                color: #875de5;
+            }
+
+            .menu-toggle i {
+                font-size: 20px;
+            }
+
+            .dashboard-toolbar {
+                min-height: 84px;
+                background-color: #dfdfdf;
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-align: center;
+                -webkit-align-items: center;
+                -ms-flex-align: center;
+                align-items: center;
+                padding: 8px 27px;
+                position: fixed;
+                top: 0;
+                right: 0;
+                left: 0;
+                z-index: 1000;
+            }
+            .navbar-right{
+                float: right;
+                right: 0;
+            }
+            .navbar-right ul li {
+                margin-left: 20px;
+                list-style-type: none;
+                display: inline;
+            }
+            .dropdown-toggle {
+                background-color: #dfdfdf;
+                border: none;
+                outline: none;
+            }
+            .lang img {
+                height: 20px;
+                width: 20px;
+                overflow: hidden;
+            }
+
+            .nav-item-divider {
+                height: 1px;
+                margin: 1rem 0;
+                overflow: hidden;
+                background-color: rgba(236, 238, 239, 0.3);
+            }
+
+            @media (min-width: 992px) {
+                .dashboard-app {
+                    margin-left: 238px;
                 }
-                .sidebar a {float: left;}
-                div.content {margin-left: 0;}
-            }
 
-            /* On screens that are less than 400px, display the bar vertically, instead of horizontally */
-            @media screen and (max-width: 400px) {
-                .sidebar a {
-                    text-align: center;
-                    float: none;
+                .dashboard-compact .dashboard-app {
+                    margin-left: 0;
                 }
             }
-            @media screen and (max-width: 455px) {
-                .h3 {
-                    font-size:16px;
+
+
+            @media (max-width: 768px) {
+                .dashboard-content {
+                    padding: 15px 0px;
+                }
+            }
+
+            @media (max-width: 992px) {
+                .dashboard-nav {
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    right: 0;
+                    left: 0;
+                    bottom: 0;
+                    z-index: 1070;
+                }
+
+                .dashboard-nav.mobile-show {
+                    display: block;
+                }
+            }
+
+            @media (max-width: 992px) {
+                .dashboard-nav header .menu-toggle {
+                    display: -webkit-box;
+                    display: -webkit-flex;
+                    display: -ms-flexbox;
+                    display: flex;
+                }
+            }
+
+            @media (min-width: 992px) {
+                .dashboard-toolbar {
+                    left: 238px;
+                }
+
+                .dashboard-compact .dashboard-toolbar {
+                    left: 0;
                 }
             }
         </style>
     </head>
     <body>
-        <div class="sidebar">
-            <a href="#"><?php echo lang('home'); ?></a>
-            <a class="active" href="<?php echo base_url(); ?>User_list/list"><?php echo lang('user_list'); ?></a>
-            <a href="#"><?php echo lang('courses'); ?></a>
-        </div>
-        <!-- <div class="w3-sidebar w3-light-grey w3-card-4 w3-animate-left" style="width: 180px; display: block;" id="mySidebar">
-            <div class="w3-bar w3-dark-grey">
-                <span class="w3-bar-item w3-padding-16">Content</span>
-                <button onclick="w3_close()" class="w3-bar-item w3-button w3-right w3-padding-16" title="close Sidebar">×</button>
+        <div class='dashboard'>
+            <div class="dashboard-nav">
+                <header>
+                    <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+                    <!-- <a href="#" class="brand-logo"><img src="<?php echo base_url(); ?>images/logo-02.png" alt=""></a> -->
+                    <a href="#" class="brand-logo">
+                        <i class="fas fa-anchor"></i>
+                        <span>HRM</span>
+                    </a>
+                </header>
+                <div class="nav-item-divider"></div>
+                <nav class="dashboard-nav-list">
+                    <a href="#" class="dashboard-nav-item">
+                        <i class="fas fa-home"></i>
+                        <?php echo lang('home'); ?>
+                    </a>
+                    <a href="<?php echo base_url(); ?>User_list/list" class="dashboard-nav-item active">
+                        <i class="fas fa-list"></i>
+                        <?php echo lang('user_list'); ?>
+                    </a>
+                    <a href="#" class="dashboard-nav-item">
+                        <i class="fas fa-graduation-cap"></i>
+                        <?php echo lang('courses'); ?>
+                    </a>
+                </nav>
             </div>
-            <div class="w3-bar-block">
-                <a class="w3-bar-item w3-button w3-green" href="javascript:void(0)">Home</a>
-                <a class="w3-bar-item w3-button" href="javascript:void(0)">About</a>
-                <a class="w3-bar-item w3-button" href="javascript:void(0)">Contact</a>
-                <div class="w3-dropdown-hover">
-                    <a class="w3-button" href="javascript:void(0)">Dropdown <i class="fa fa-caret-down"></i></a>
-                    <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                        <a class="w3-bar-item w3-button" href="javascript:void(0)">Link 1</a>
-                        <a class="w3-bar-item w3-button" href="javascript:void(0)">Link 2</a>
-                        <a class="w3-bar-item w3-button" href="javascript:void(0)">Link 3</a>
+            <div class='dashboard-app'>
+                <header class='dashboard-toolbar'>
+                    <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+                    <div class="navbar-right">
+                        <ul>
+                            <li class="dropdown">
+                                <button class="dropdown-toggle" type="button" data-toggle="dropdown">
+                                    <i class="fas fa-language"></i>
+                                    <?php echo lang('lang'); ?>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li class="lang">
+                                        <a href="<?php echo base_url(); ?>Language_switcher/switchLang/vietnamese" class="dashboard-nav-dropdown-item">
+                                            <img src="<?php echo base_url(); ?>images/vietnam-s.png" alt="">
+                                            <?php echo lang('vi'); ?>
+                                        </a>
+                                    </li>
+                                    <li class="lang">
+                                        <a href="<?php echo base_url(); ?>Language_switcher/switchLang/english" class="dashboard-nav-dropdown-item">
+                                            <img src="<?php echo base_url(); ?>images/united-kingdom-s.png" alt="">
+                                            <?php echo lang('en'); ?>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <button class="dropdown-toggle" type="button" data-toggle="dropdown">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                    <?php echo ' ' . $this->session->userdata('name'); ?>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#"><?php echo lang('account'); ?></a></li>
+                                    <li><a href="<?php echo base_url('Authentication/logout'); ?>"><?php echo lang('logout'); ?></a></li>
+                                </ul>
+                            </li>
+                        </ul>
                     </div>
+                </header>
+                <div class='dashboard-content'>
+                    <!-- <div class='container'>
+                        <div class='card'>
+                            <div class='card-header'>
+                                <h1>Welcome back Jim</h1>
+                            </div>
+                            <div class='card-body'>
+                                <p>Your account type is: Administrator</p>
+                            </div>
+                        </div>
+                    </div> -->
                 </div>
-                <a class="w3-bar-item w3-button" href="javascript:void(0)">Support</a>
             </div>
-        </div> -->
+        </div>
     </body>
+    <script>
+        const mobileScreen = window.matchMedia("(max-width: 990px )");
+        $(document).ready(function () {
+            $(".dashboard-nav-dropdown-toggle").click(function () {
+                $(this).closest(".dashboard-nav-dropdown")
+                    .toggleClass("show")
+                    .find(".dashboard-nav-dropdown")
+                    .removeClass("show");
+                $(this).parent()
+                    .siblings()
+                    .removeClass("show");
+            });
+            $(".menu-toggle").click(function () {
+                if (mobileScreen.matches) {
+                    $(".dashboard-nav").toggleClass("mobile-show");
+                } else {
+                    $(".dashboard").toggleClass("dashboard-compact");
+                }
+            });
+        });
+    </script>
 </html>

@@ -4,146 +4,156 @@
     <head>
         <meta charset="utf-8">
         <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
+            body {
+                font-family: "Lato", sans-serif;
             }
-            html {
-                background-color: #ffffff;
-                color: #000000;
-                font-family: 'Lato', sans-serif;
-                font-size: 15px;
-                text-rendering: optimizeLegibility;
+            .nav-menu {
+                background-color: #111;
+                color: #ffffff;
             }
-            .clearfix::after {
-                clear: both;
-            }
-            header {
-                background-color: #f1f1f1;
-                padding-bottom: 20px;
-                padding-top: 20px;
-                position: fixed; /* Set the navbar to fixed position */
-                top: 0; /* Position the navbar at the top of the page */
-                width: 100%; /* Full width */
-            }
-            .logo-container {
-                color: #000000;
-                float: left;
-                margin-left: 5%;
-            }
-            .logo {
-                font-size: 400%;
-            }
-            .right-container {
-                color: #000000;
-                float: right;
-                display: inline;
-                margin-right: 3%;
-            }
-            .user-control {
-                font-size: 400%;
-                cursor: pointer;
-            }
-            .user-dropdown-menu {
-                border-radius: 10px;
-                border: 0.5px solid #e5e5e5;
-                background-color: white;
-                display: none;
-                position: absolute;
-                top: 60%;
-                right: 3%;
-                overflow: hidden;
-            }
-            .user-dropdown-menu a {
-                display: block;
-                color: black;
-                text-decoration: none;
-            }
-            .user-info,
-            .logout{
-                background-color: white;
+            .navbar.navbar-inverse {
                 border: none;
-                border-radius: 10px;
-                color: black;
-                cursor: pointer;
-                display: block;
-                font-size: 100%;
-                padding: 12px 16px;
-                text-align: center;
-                width: 200px;
+                border-radius: 0px;
             }
-            .user-info:hover,
-            .user-info:active,
-            .logout:hover,
-            .logout:active {
-                background-color: #f1f1f1;
+            .navbar-header img {
+                border: red 2px solid;
+                width: 10%;
             }
-            .user-container:hover .user-dropdown-menu {
-                display: block;
-                animation: down linear 0.2s;
-            }
-            .user-control img{
-                height: 70px;
-                width: 70px;
-                border-radius: 50%;
+            .lang img {
+                height: 20px;
+                width: 20px;
                 overflow: hidden;
+            }
+            .dropdown img {
+                height: 40px;
+                width: 40px;
+                border-radius: 50%;
+            }
+
+            /* Add a black background color to the top navigation */
+            .topnav {
+                background-color: #333;
+                overflow: hidden;
+                position: fixed;
+                top: 0;
+                width: 100%;
+            }
+
+            /* Style the links inside the navigation bar */
+            .topnav a {
+                float: left;
+                color: #f2f2f2;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-size: 17px;
+            }
+
+            /* Change the color of links on hover */
+            .topnav a:hover {
+                background-color: #ddd;
+                color: black;
+            }
+
+            /* Add a color to the active/current link */
+            .topnav a.active {
+                background-color: #04AA6D;
+                color: white;
+            }
+
+            /* Right-aligned section inside the top navigation */
+            .topnav-right {
+                float: right;
+            }
+            
+            .sidenav {
+                height: 100%;
+                width: 160px;
+                position: fixed;
+                z-index: 1;
+                top: 0;
+                left: 0;
+                background-color: #222;
+                overflow-x: hidden;
+                padding-top: 20px;
+            }
+
+            .sidenav a {
+                padding: 6px 8px 6px 16px;
+                text-decoration: none;
+                font-size: 25px;
+                color: #818181;
+                display: block;
+            }
+
+            .sidenav a:hover {
+                color: #f1f1f1;
+            }
+
+            .main {
+                margin-left: 160px; /* Same as the width of the sidenav */
+                font-size: 28px; /* Increased text to enable scrolling */
+                padding: 0px 10px;
+            }
+
+            @media screen and (max-height: 450px) {
+                .sidenav {padding-top: 15px;}
+                .sidenav a {font-size: 18px;}
             }
         </style>
     </head>
-    <header>
-        <div class="logo-container">
-            <h1 class="logo">LOGO</h1>
-        </div>
-        <div class="right-container">
-            <div class="user-container">
-                <div class="user-control">
-                    <?php
-                        if (!empty($this->session->userdata('img'))) {
-                            echo '<img src="'.base_url('public/images/').$this->session->userdata('img').'" alt="Avatar">';
-                        } else {
-                            echo '<iconify-icon icon="mdi:user-circle"></iconify-icon>';
-                        }   
-                    ?>
-                </div>
-                <div class="user-dropdown-menu">
-                    <a href="#" class="user-info"><?php echo lang('account'); ?></a>
-                    <form method="post" action="<?php echo base_url(); ?>Authentication/logout">
-                        <input class="logout" type="submit" value="<?php echo lang('logout'); ?>" name="logout-submit">
-                    </form>
-                </div>
+    <body>
+        <div class="top-nav">
+            <div class="nav-menu">
+                <nav class="navbar navbar-inverse">
+                    <div class="container-fluid">
+                        <!-- <div class="navbar-header">
+                            <a class="navbar-brand" href="#">
+                                <img src="<?php echo base_url(); ?>images/logo-04.png" alt="">
+                                Logo
+                            </a>
+                        </div> -->
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="lang">
+                                <a href='<?php echo base_url(); ?>Language_switcher/switchLang/vietnamese'>
+                                    <img src="<?php echo base_url(); ?>images/vietnam-s.png" alt=""> Vietnamese
+                                </a>
+                            </li>
+                            <li class="lang">
+                                <a href='<?php echo base_url(); ?>Language_switcher/switchLang/english'>
+                                    <img src="<?php echo base_url(); ?>images/united-kingdom-s.png" alt=""> English
+                                </a>
+                            </li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                    <?php echo ' ' . $this->session->userdata('name'); ?>
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#"><?php echo lang('account'); ?></a></li>
+                                    <li><a href="<?php echo base_url('Authentication/logout'); ?>"><?php echo lang('logout'); ?></a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
             </div>
-            <div class="lang-control">
-                <select class="lang-selected" id="language" onchange="change()">
-                    <option value="english" <?php if (get_cookie('language') === 'english') echo 'selected'; ?>>EN</option>
-                    <option value="vietnamese" <?php if (get_cookie('language') === 'vietnamese') echo 'selected'; ?>>VI</option>
-                </select>
-            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-    <script>
-        function change()
-        {
-            language();
-            redirect();
-        }
-        function redirect()
-        {
-            window.location = location.href;
-        }
-        function language()
-        {
-            document.cookie = 'language='+String($("#language").val());
-        }
-        // $('#category').change(function() {
-        //     var language = String($("#language").val());
-        //     $.ajax({
-        //         url: 'http://localhost/conghau_hrm/switchLanguage/switch',
-        //         data: {language: language},
-        //         type: 'GET',
-        //         datatype: 'json',
-        //     });
-        // });
-    </script>
+        <!-- <div class="topnav">
+            <a class="active" href="#home">Home</a>
+            <a href="#news">News</a>
+            <a href="#contact">Contact</a>
+            <div class="topnav-right">
+                <a href="#search">Search</a>
+                <a href="#about">About</a>
+            </div>
+        </div> -->
+        <div class="sidenav bg-dark">
+            <a href="#about">About</a>
+            <a href="#services">Services</a>
+            <a href="#clients">Clients</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </body>
 </html>

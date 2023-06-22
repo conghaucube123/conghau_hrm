@@ -1,21 +1,12 @@
 <?php
     class Profile_model extends CI_Model
     {
-        public function getSearch($data = [])
+        public function getProfilesSearch($data = [])
         {
             $this->db->select('*');
             $this->db->from('profiles');
             $this->db->join('users', 'users.profile_id = profiles.id');
-            if (!empty($data['employeeId'])) {
-                $this->db->like('employee_id', $data['employeeId']);
-            }
-            if (!empty($data['name'])) {
-                $this->db->like('name', $data['name']);
-            }
-            if (!empty($data['email'])) {
-                $this->db->like('email', $data['email']);
-            }
-            $this->db->where('profiles.del_flag !=', 1);
+            $this->db->where('profiles.del_flag', '0');
             if (!empty($data['available']) && empty($data['unavailable'])) {
                 $this->db->where('status', $data['available']);
             }
@@ -46,6 +37,7 @@
         
         public function getProfile($data = [])
         {
+            $this->db->where('profiles.del_flag', '0');
             if (isset($data['employeeId']) && !empty($data['employeeId'])) {
                 $this->db->where('employee_id', $data['employeeId']);
             }
@@ -55,8 +47,11 @@
             if (isset($data['id']) && !empty($data['id'])) {
                 $this->db->where('id', $data['id']);
             }
-             
-            return $this->db->get('profiles')->row_array();
+            if (isset($data['employeeId']) | isset($data['email']) | isset($data['id'])) {
+                return $this->db->get('profiles')->row_array();
+            }
+
+            return $this->db->get('profiles')->result_array();
         }
 
         public function updateProfile($data = [])
@@ -80,16 +75,18 @@
             $this->db->update('profiles');
         }
 
-        public function createProfile($data = [])
+        public function addProfile($data = [])
         {
             $this->db->insert('profiles', $data);
             return $this->db->insert_id();
         }
 
-        public function deleteProfile($id = '')
+        public function deleteProfile($data = [])
         {
             $this->db->set('del_flag', '1');
-            $this->db->where('id', $id);
+            $this->db->set('updated_user', $data['updateUser']);
+            $this->db->set('updated_time', 'now');
+            $this->db->where('id', $data['id']);
             $this->db->update('profiles');
         }
     }

@@ -3,6 +3,7 @@
     {
         public function getUser($data = [])
         {
+            $this->db->where('del_flag', '0');
             if (isset($data['loginId']) && !empty($data['loginId'])) {
                 $this->db->where('login_id', $data['loginId']);
             }
@@ -12,8 +13,7 @@
             if (isset($data['password']) && !empty($data['password'])) {
                 $this->db->where('password', $data['password']);
             }
-            $this->db->where('del_flag !=', 1);
-            if (!empty($data['loginId']) | !empty($data['profileId']) | !empty($data['password'])) {
+            if (isset($data['loginId']) | isset($data['profileId']) | isset($data['password'])) {
                 return $this->db->get('users')->row_array();
             }
 
@@ -32,15 +32,24 @@
             $this->db->update('users');
         }
 
-        public function createUser($data = [])
+        public function updateLogin($data = [])
+        {
+            $this->db->set('recent_login', 'now');
+            $this->db->where('profile_id', $data['id']);
+            $this->db->update('users');
+        }
+
+        public function addUser($data = [])
         {
             $this->db->insert('users', $data);
         }
 
-        public function deleteUser($id = '')
+        public function deleteUser($data = [])
         {
             $this->db->set('del_flag', '1');
-            $this->db->where('profile_id', $id);
+            $this->db->set('updated_user', $data['updateUser']);
+            $this->db->set('updated_time', 'now');
+            $this->db->where('profile_id', $data['id']);
             $this->db->update('users');
         }
     }

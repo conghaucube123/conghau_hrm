@@ -1,0 +1,458 @@
+<?php
+    date_default_timezone_set('Asia/Bangkok');
+    require_once 'vendor/autoload.php';
+    class Courses extends MY_Controller
+    {
+        public function __construct()
+        {
+            parent::__construct();
+            $this->load->model('Profile_model');
+            $this->load->model('Course_model');
+            $this->load->model('Course_detail_model');
+        }
+
+        /**
+         * Courses screen
+         */
+        public function courses($message = [])
+        {
+            // Set data to load User list view
+            $content = $this->load->view('courses/courses', $message ,true);
+            
+            // View User list screen
+            $this->load->view('master_page', ['content' => $content]);
+        }
+
+        /**
+         * Filter Course data for datatable
+         */
+        public function filterCourseData($data = [])
+        {
+            $draw = (int)($this->input->post("draw"));
+            $columnOrder = ['name', 'course_type', 'time', 'weekdays', 'start_date', 'end_date',] ;
+            $order = $columnOrder[(int)$this->input->post('order[0][column]')];
+            $dir = $this->input->post('order[0][dir]');
+            $recordsTotal = count($this->Course_model->getCoursesSearch());
+            $dataSearch = [
+                'name' => trim($this->input->post('name')),
+                'weekDay' => $this->input->post('weekDay'),
+                'time' => date($this->input->post('time')),
+                'startDate' => $this->input->post('startDate'),
+                'endDate' => $this->input->post('endDate'),
+                'course' => $this->input->post('course'),
+                'event' => $this->input->post('event'),
+            ];
+            $recordsFilter = count($this->Course_model->getCoursesSearch($dataSearch));
+            $dataFilter = [
+                'order' => $dir,
+                'orderBy' => $order,
+                'limit' => (int)$this->input->post('length'),
+                'offset' => (int)$this->input->post('start'),
+            ];
+            $data = array_merge($dataSearch, $dataFilter);
+            $courses = $this->Course_model->getCoursesSearch($data);
+            $dataResult = [];
+            foreach ($courses as $course) {
+                $temp = [];
+                $temp['name'] = $course['name'];
+                $temp['time'] = substr($course['time'], 0, 5);
+                $temp['weekDay'] = $course['weekdays'];
+                $temp['startDate'] = $course['start_date'];
+                $temp['endDate'] = $course['end_date'];
+                if ($course['course_type'] === '1') {
+                    $temp['type'] = 'Course';
+                } else {
+                    $temp['type'] = 'Event';
+                }
+                $temp['id'] = $course['id'];
+                $dataResult[] = $temp;
+            }
+            $result = [
+                "draw" => $draw,
+                "recordsTotal" => $recordsTotal,
+                "recordsFiltered" => $recordsFilter,
+                "data" => $dataResult,
+            ];
+            echo json_encode($result);
+        }
+
+        /**
+         * Filter Employee list data for datatable
+         */
+        public function filterEmployeeListData($data = [])
+        {
+            $courseId = trim($this->input->post('courseId'));
+            $draw = (int)($this->input->post("draw"));
+            if (empty($courseId)) {
+                $result = [
+                    "draw" => $draw,
+                    "recordsTotal" => 0,
+                    "recordsFiltered" => 0,
+                    "data" => [],
+                ];
+                echo json_encode($result);
+
+                return;
+            }
+            $columnOrder = ['employee_id', 'name', 'email', 'birthday', 'address', 'mobile', 'gender',] ;
+            $order = $columnOrder[(int)$this->input->post('order[0][column]')];
+            $dir = $this->input->post('order[0][dir]');
+            $dataSearch = [
+                'courseId' => $courseId,
+            ];
+            $recordsFilter = count($this->Course_detail_model->getEmployeeList($dataSearch));
+            $recordsTotal = $recordsFilter;
+            $dataFilter = [
+                'order' => $dir,
+                'orderBy' => $order,
+            ];
+            $data = array_merge($dataSearch, $dataFilter);
+            $course_details = $this->Course_detail_model->getEmployeeList($data);
+            $dataResult = [];
+            foreach ($course_details as $course_detail) {
+                $temp = [];
+                $temp['employeeID'] = $course_detail['employee_id'];
+                $temp['name'] = $course_detail['name'];
+                $temp['birthday'] = $course_detail['birthday'];
+                if ($course_detail['gender'] === '1') {
+                    $temp['gender'] = 'Male';
+                } else {
+                    $temp['gender'] = 'Female';
+                }
+                $temp['address'] = $course_detail['address'];
+                $temp['email'] = $course_detail['email'];
+                $temp['mobile'] = $course_detail['mobile'];
+                $temp['image'] = $course_detail['image'];
+                $temp['profileId'] = $course_detail['profile_id'];
+                $temp['courseId'] = $course_detail['course_id'];
+                $dataResult[] = $temp;
+            }
+            $result = [
+                "draw" => $draw,
+                "recordsTotal" => $recordsTotal,
+                "recordsFiltered" => $recordsFilter,
+                "data" => $dataResult,
+            ];
+            echo json_encode($result);
+        }
+
+        /**
+         * Get Employee list data for add employee modal
+         */
+        public function getProfileData()
+        {
+            $profiles = $this->Profile_model->getProfile();
+            $dataResult = [];
+            foreach ($profiles as $profile) {
+                $temp = [];
+                $temp['id'] = $profile['id'];
+                $temp['image'] = $profile['image'];
+                $temp['employeeId'] = $profile['employee_id'];
+                $temp['name'] = $profile['name'];
+                $temp['birthday'] = $profile['birthday'];
+                $temp['mobile'] = $profile['mobile'];
+                $temp['gender'] = $profile['gender'];
+                $temp['email'] = $profile['email'];
+                $temp['address'] = $profile['address'];
+                $dataResult[] = $temp;
+            }
+            echo json_encode($dataResult);
+        }
+
+        /**
+         * Data check
+         * 
+         * @param   array data to check duplicate
+         * @return  array  error of data duplication if any
+         */
+        private function dataCheck($data = [])
+        {
+            // Initialize error array
+            $error = [
+                'flag' => FALSE,
+                'name' => '',
+                'profileId' => '',
+            ];
+            if (!empty($data['name'])) {
+                if ($this->Course_model->getCourse(['name' => $data['name'],])) {
+                    $course = $this->Course_model->getCourse(['name' => $data['name'],]);
+                    if (strcasecmp($course['id'], $data['id']) != 0) {
+                        $error['name'] = lang('C_NAME003');
+                        $error['flag'] = TRUE;
+                    }
+                }
+            }
+            if (!empty($data['profileId']) && !empty($data['courseId'])) {
+                $find = [
+                    'profile_id' => $data['profileId'],
+                    'course_id' => $data['courseId'],
+                ];
+                if ($this->Course_detail_model->getCourseDetail($find)) {
+                    $error['profileId'] = lang('PROFILEID001');
+                    $error['flag'] = TRUE;
+                }
+            }
+
+            return $error;
+        }
+
+        /**
+         * Edit screen
+         * 
+         * @param array error of data if any
+         */
+        private function showEditView($id = '', $error = [])
+        {
+            // Set data to view Edit screen
+            $data['course'] = $this->Course_model->getCourse(['id' => $id,]);
+            $data['course_details'] = $this->Course_detail_model->getEmployeeList(['courseId' => $id,]);
+            $data = array_merge($data, $error);
+            $content = $this->load->view('courses/edit', $data ,true);
+            
+            // View Edit screen
+            $this->load->view('master_page', ['content' => $content]);
+        }
+
+        public function edit($id = '')
+        {
+            $error = [];
+            if ($this->input->post('name')) {
+                // Drawl input data
+                $weekDays = $this->input->post('weekDays');
+                $weekdays = '';
+                if (!empty($weekDays)) {
+                    $weekdays = $weekDays[0];
+                    for ($i = 1; $i < count($weekDays); $i++) {
+                        $weekdays = $weekdays . ', ' . $weekDays[$i];
+                    }
+                }
+                if ($this->input->post('type') === 2) {
+                    $weekdays = NULL;
+                }
+                $dataCourse = [
+                    'id' => $id,
+                    'name' => trim($this->input->post('name')),
+                    'time' => date($this->input->post('time')),
+                    'courseType' => $this->input->post('type'),
+                    'startDate' => $this->input->post('startDate'),
+                    'endDate' => $this->input->post('endDate'),
+                    'weekDays' => $weekdays,
+                    'updateUser' => $this->session->userdata('loginId'),
+                ];
+
+                $returnData = [
+                    'namer' => $dataCourse['name'],
+                    'timer' => $dataCourse['time'],
+                    'courseTyper' => $dataCourse['courseType'],
+                    'startDater' => $dataCourse['startDate'],
+                    'endDater' => $dataCourse['endDate'],
+                    'weekDaysr' => $weekdays,
+                ];
+                $error = array_merge($error, $returnData);
+
+                // Check data before update
+                $dataCheck = [
+                    'id' => $id,
+                    'name' => $dataCourse['name'],
+                ];
+                $dataError = $this->dataCheck($dataCheck);
+                
+                // Return error if any
+                if ($dataError['flag']) {
+                    $error = array_merge($error, $dataError);
+                    $this->showEditView($id, $error);
+
+                    return;
+                }
+
+                // Update Course information
+                try {
+                    $this->db->trans_start();
+                    $this->Course_model->updateCourse($dataCourse);
+                    $this->db->trans_complete();
+                    $name = $this->Course_model->getCourse(['id' => $id,])['name'];
+                    $error['course_message'] = lang('update_course') .' '. $name .' '. lang('success');
+                    $this->showEditView($id, $error);
+                } catch (Exception $e) {
+                    echo $e;
+                    $this->db->trans_rollback();
+                }
+            } else if ($this->input->post('profileId_')) {
+                // Drawl input data
+                $employeeName = trim($this->input->post('fullname_'));
+                $courseName = trim($this->input->post('courseName_'));
+                $dataEmployee = [
+                    'profile_id' => trim($this->input->post('profileId_')),
+                    'course_id' => $id,
+                    'updated_user' => $this->session->userdata('loginId'),
+                    'created_user' => $this->session->userdata('loginId'),
+                ];
+
+                // Check data before add
+                $dataCheck = [
+                    'profileId' => $dataEmployee['profile_id'],
+                    'courseId' => $id,
+                ];
+                $dataError = $this->dataCheck($dataCheck);
+
+                // Return error if any
+                if ($dataError['flag']) {
+                    $this->showEditView($id, $dataError);
+
+                    return;
+                }
+                
+                // Add Employee to Course Detail
+                try {
+                    $this->db->trans_start();
+                    $this->Course_detail_model->addEmployee($dataEmployee);
+                    $this->db->trans_complete();
+                    $error['employee_message'] = lang('add_course_detail_1') .' '. $employeeName .' '. lang('add_course_detail_2') .' '. $courseName .' '. lang('success');
+                    $this->showEditView($id, $error);
+                } catch (Exception $e) {
+                    echo $e;
+                    $this->db->trans_rollback();
+                }
+            } if (!empty($_FILES['file-upload-employee-list-hidden']['name'])) {
+                $excelfile = $_FILES["file-upload-employee-list-hidden"]["tmp_name"];
+                $type = ['xls', 'csv', 'xlsx'];
+            } else {
+                $this->showEditView($id);
+
+                return;
+            }
+        }
+
+        /**
+         * Add screen
+         * 
+         * @param array error of data if any
+         */
+        private function showAddView($error = [])
+        {
+            // Set data to view Add screen
+            $content = $this->load->view('courses/add', $error ,true);
+            
+            // View Add screen
+            $this->load->view('master_page', ['content' => $content]);
+        }
+
+        public function add()
+        {
+            $error = [];
+            if (!$this->input->post('name')) {
+                $this->showAddView();
+
+                return;
+            }
+
+            // Drawl input data
+            $weekDays = $this->input->post('weekDays');
+            $weekdays = '';
+            if (!empty($weekDays)) {
+                $weekdays = $weekDays[0];
+                for ($i = 1; $i < count($weekDays); $i++) {
+                    $weekdays = $weekdays . ', ' . $weekDays[$i];
+                }
+            }
+            $dataCourse = [
+                'name' => trim($this->input->post('name')),
+                'time' => date($this->input->post('time')),
+                'course_type' => $this->input->post('type'),
+                'start_date' => $this->input->post('startDate'),
+                'end_date' => $this->input->post('endDate'),
+                'weekdays' => $weekdays,
+                'updated_user' => $this->session->userdata('loginId'),
+                'created_user' => $this->session->userdata('loginId'),
+            ];
+
+            $returnData = [
+                'namer' => $dataCourse['name'],
+                'timer' => $dataCourse['time'],
+                'courseTyper' => $dataCourse['course_type'],
+                'startDater' => $dataCourse['start_date'],
+                'endDater' => $dataCourse['end_date'],
+                'weekDaysr' => $weekDays,
+            ];
+            $error = array_merge($error, $returnData);
+
+            // Check data before add
+            $dataCheck = [
+                'id' => '0',
+                'name' => $dataCourse['name'],
+            ];
+            $dataError = $this->dataCheck($dataCheck);
+            
+            // Return error if any
+            if ($dataError['flag']) {
+                $error = array_merge($error, $dataError);
+                $this->showAddView($error);
+
+                return;
+            }
+            
+            // Add Course
+            try {
+                $this->db->trans_start();
+                $id = $this->Course_model->addCourse($dataCourse);
+                $this->db->trans_complete();
+                redirect('/Courses/edit/'.$id, 'location');
+            } catch (Exception $e) {
+                echo $e;
+                $this->db->trans_rollback();
+            }
+        }
+
+        /**
+         * Delete Course
+         */
+        public function deleteCourse()
+        {
+            // Delete Course
+            try {
+                $name = trim($this->input->post('name'));
+                $dataDelete = [
+                    'id' => trim($this->input->post('id')),
+                    'updateUser' => $this->session->userdata('loginId'),
+                ];
+                $this->db->trans_start();
+                $this->Course_model->deleteCourse($dataDelete);
+                $this->db->trans_complete();
+                header('Content-Type', 'application/json');
+                echo json_encode([
+                    'success' => true,
+                    'message'=> lang('delete_course') .' '. $name .' '. lang('success'),
+                ]);
+            } catch (Exception $e) {
+                echo $e;
+                $this->db->trans_rollback();
+            }
+        }
+
+        /**
+         * Delete Employee
+         */
+        public function deleteEmployee()
+        {
+            // Delete Employee
+            try {
+                $dataDelete = [
+                    'profileId' => trim($this->input->post('profileId')),
+                    'courseId' => trim($this->input->post('courseId')),
+                    'updateUser' => $this->session->userdata('loginId'),
+                ];
+                $name = $this->Profile_model->getProfile(['id' => $dataDelete['profileId'],])['name'];
+                $this->db->trans_start();
+                $this->Course_detail_model->deleteEmployee($dataDelete);
+                $this->db->trans_complete();
+                header('Content-Type', 'application/json');
+                echo json_encode([
+                    'success' => true,
+                    'message'=> lang('delete_employee') .' '. $name .' '. lang('success'),
+                ]);
+            } catch (Exception $e) {
+                echo $e;
+                $this->db->trans_rollback();
+            }
+        }
+    }
