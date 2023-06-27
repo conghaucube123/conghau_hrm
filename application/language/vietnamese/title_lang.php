@@ -33,6 +33,7 @@
     $lang["no"] = "Không";
     $lang["upload"] = "Tải lên";
     $lang["cancle"] = "Hủy";
+    $lang["template"] = "Tập Tin Mẫu";
     // Other
     $lang["login_id"] = "Tên ĐĂNG NHẬP";
     $lang["gender"] = "GIỚI TÍNH";

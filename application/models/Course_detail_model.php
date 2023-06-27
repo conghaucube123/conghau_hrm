@@ -27,6 +27,22 @@
             return $this->db->insert_id();
         }
 
+        public function updateEmployeeByUpload($data = [])
+        {
+            $this->db->set('del_flag', '1');
+            $this->db->set('updated_user', $data['updatedUser']);
+            $this->db->set('updated_time', 'now');
+            $this->db->where('course_id', $data['courseId']);
+            $this->db->update('course_details');
+        }
+
+        public function addEmployeeByUpload($data = [])
+        {
+            foreach ($data as $item) {
+                $this->db->insert('course_details', $item);
+            }
+        }
+
         public function deleteEmployee($data = [])
         {
             $this->db->set('del_flag', '1');

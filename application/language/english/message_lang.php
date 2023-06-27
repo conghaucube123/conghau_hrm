@@ -52,7 +52,12 @@
     // Course Type
     $lang["C_TYPE001"] = "Please choose the Course Type!";
     // Profile ID
-    $lang["PROFILEID001"] = "This employee participated in the course.";
+    $lang["PROFILEID001"] = "Employee participated in this course.";
     // Upload file
-    $lang["UPLOAD001"] = "Choose your file";
-    
+    $lang["UPLOAD001"] = "Please choose your file!";
+    $lang["UPLOAD002"] = "Line";
+    $lang["UPLOAD003"] = "Employee ID required!";
+    $lang["UPLOAD004"] = "Email required!";
+    $lang["UPLOAD005"] = "The file type is not right. It must be xls or xlsx or CSV.";
+    $lang["UPLOAD006"] = "List error data is shown as below";
+    $lang["UPLOAD007"] = "errors";

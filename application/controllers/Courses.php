@@ -234,8 +234,8 @@
                     'name' => trim($this->input->post('name')),
                     'time' => date($this->input->post('time')),
                     'courseType' => $this->input->post('type'),
-                    'startDate' => $this->input->post('startDate'),
-                    'endDate' => $this->input->post('endDate'),
+                    'startDate' => date($this->input->post('startDate')),
+                    'endDate' => date($this->input->post('endDate')),
                     'weekDays' => $weekdays,
                     'updateUser' => $this->session->userdata('loginId'),
                 ];
@@ -283,7 +283,7 @@
                 $courseName = trim($this->input->post('courseName_'));
                 $dataEmployee = [
                     'profile_id' => trim($this->input->post('profileId_')),
-                    'course_id' => $id,
+                    'course_id' => trim($this->input->post('courseId_')),
                     'updated_user' => $this->session->userdata('loginId'),
                     'created_user' => $this->session->userdata('loginId'),
                 ];
@@ -291,7 +291,7 @@
                 // Check data before add
                 $dataCheck = [
                     'profileId' => $dataEmployee['profile_id'],
-                    'courseId' => $id,
+                    'courseId' => $dataEmployee['course_id'],
                 ];
                 $dataError = $this->dataCheck($dataCheck);
 
@@ -313,14 +313,158 @@
                     echo $e;
                     $this->db->trans_rollback();
                 }
-            } if (!empty($_FILES['file-upload-employee-list-hidden']['name'])) {
-                $excelfile = $_FILES["file-upload-employee-list-hidden"]["tmp_name"];
-                $type = ['xls', 'csv', 'xlsx'];
             } else {
                 $this->showEditView($id);
 
                 return;
             }
+        }
+
+        /**
+         * Add Employee to Course detail
+         */
+        public function addEmployee()
+        {
+            // Drawl input data
+            $employeeName = trim($this->input->post('fullname_'));
+            $courseName = trim($this->input->post('courseName_'));
+            $dataEmployee = [
+                'profile_id' => trim($this->input->post('profileId_')),
+                'course_id' => trim($this->input->post('courseId_')),
+                'updated_user' => $this->session->userdata('loginId'),
+                'created_user' => $this->session->userdata('loginId'),
+            ];
+
+            // Check data before add
+            $dataCheck = [
+                'profileId' => $dataEmployee['profile_id'],
+                'courseId' => $dataEmployee['course_id'],
+            ];
+            $dataError = $this->dataCheck($dataCheck);
+
+            // Return error if any
+            if ($dataError['flag']) {
+                echo json_encode([
+                    'success' => false,
+                    'message'=> $dataError['profileId'] . '<br>',
+                ]);
+
+                return;
+            }
+            
+            // Add Employee to Course Detail
+            try {
+                $this->db->trans_start();
+                $this->Course_detail_model->addEmployee($dataEmployee);
+                $this->db->trans_complete();
+                echo json_encode([
+                    'success' => true,
+                    'message'=> lang('add_course_detail_1') .' '. $employeeName .' '. lang('add_course_detail_2') .' '. $courseName .' '. lang('success') . '<br>',
+                ]);
+            } catch (Exception $e) {
+                echo $e;
+                $this->db->trans_rollback();
+            }
+        }
+
+        /**
+         * Upload file Employee list in Edit course screen
+         */
+        public function upload()
+        {
+            $excelFile = $_FILES["file-upload-employee-list-hidden"]["tmp_name"];
+            $fileName = $_FILES['file-upload-employee-list-hidden']['name'];
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($excelFile);
+            $typeAllow = ['xls', 'csv', 'xlsx'];
+            $checkExt = explode('.', $fileName);
+            $fileExt = end($checkExt);
+            if (!in_array(strtolower($fileExt), $typeAllow)) {
+                echo json_encode([
+                    'success' => false,
+                    'message'=> lang('UPLOAD005') . '<br>',
+                ]);
+
+                return;
+            }
+            $data = $spreadsheet->getActiveSheet()->toArray($excelFile);
+            $error = [
+                'count' => 0,
+                'error' => '',
+            ];
+            for ($i = 1; $i < count($data); $i++) {
+                $checkEmp = explode('.', $data[$i][0]);
+                $emp = end($checkEmp);
+                $checkEma = explode('.', $data[$i][5]);
+                $ema = end($checkEma);
+                if (($emp === 'tmp') && ($ema === 'tmp')) {
+                    $error['error'] = $error['error'] . '&nbsp;&nbsp;&nbsp;&nbsp; - ' . lang('UPLOAD002') . ' ' . ($i + 2) . ':<br>' . '&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; + ' . lang('UPLOAD003')  . '<br>' . '&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; + ' . lang('UPLOAD004') . '<br>';
+                    $error['count'] = $error['count'] + 2;
+                } else if ($emp === 'tmp') {
+                    $error['error'] = $error['error'] . '&nbsp;&nbsp;&nbsp;&nbsp; - ' . lang('UPLOAD002') . ' ' . ($i + 2) . ': ' . lang('UPLOAD003') . '<br>';
+                    $error['count'] = $error['count'] + 1;
+                } else if ($ema === 'tmp') {
+                    $error['error'] = $error['error'] . '&nbsp;&nbsp;&nbsp;&nbsp; - ' . lang('UPLOAD002') . ' ' . ($i + 2) . ': ' . lang('UPLOAD004') . '<br>';
+                    $error['count'] = $error['count'] + 1;
+                }
+            }
+            if ($error['count'] > 0) {
+                echo json_encode([
+                    'success' => false,
+                    'message'=> lang('UPLOAD006') . ' (' . $error['count'] . ' ' . lang('UPLOAD007') . '):<br>' . $error['error'],
+                ]);
+
+                return;
+            }
+            $dataList = [];
+            for ($i = 1; $i < count($data); $i++) {
+                $temp = [];
+                $temp['course_id'] = $this->input->post('courseId');
+                $temp['profile_id'] = $this->Profile_model->getProfile(['employeeId' => (string)($data[$i][0]),])['id'];
+                $temp['updated_user'] = $this->session->userdata('loginId');
+                $temp['created_user'] = $this->session->userdata('loginId');
+                $dataList[] = $temp;
+            }
+            $dataUpdate = [
+                'courseId' => $dataList['0']['course_id'],
+                'updatedUser' => $this->session->userdata('loginId'),
+            ];
+            try {
+                $this->db->trans_start();
+                $this->Course_detail_model->updateEmployeeByUpload($dataUpdate);
+                $this->Course_detail_model->addEmployeeByUpload($dataList);
+                $this->db->trans_complete();
+                echo json_encode([
+                    'success' => true,
+                    'message'=> lang('upload_employee_list'),
+                ]);
+            } catch (Exception $e) {
+                echo $e;
+                $this->db->trans_rollback();
+                echo json_encode([
+                    'success' => false,
+                    'message'=> lang('upload_fail') . '<br>',
+                ]);
+            }
+        }
+
+        /**
+         * Export template of Employee list
+         */
+        public function exportEmployeeListTemplate()
+        {
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+            // $spreadsheet = $reader->load(base_url('public/file/employee_list_template.xlsx'));
+            if ($this->session->userdata('site_lang') === 'vietnamese') {
+                $filePath = 'views/courses/employee_list_template_vi.xlsx';
+            } else {
+                $filePath = 'views/courses/employee_list_template_en.xlsx';
+            }
+            $spreadsheet = $reader->load(APPPATH . $filePath);
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename="employee_list_template.xlsx"');
+            header('Cache-Control: max-age=0');
+            $writer->save('php://output');
         }
 
         /**

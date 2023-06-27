@@ -1,5 +1,6 @@
 <?php
     date_default_timezone_set('Asia/Bangkok');
+    require_once 'vendor/autoload.php';
     class User_list extends MY_Controller
     {
         public function __construct()
@@ -103,7 +104,47 @@
             echo json_encode($result);
         }
 
-
+        /**
+         * Export  User list
+         */
+        public function exportUserList()
+        {
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+            // $spreadsheet = $reader->load(base_url('public/file/employee_list_template.xlsx'));
+            if ($this->session->userdata('site_lang') === 'vietnamese') {
+                $filePath = 'views/user_list/user_list_template_vi.xlsx';
+            } else {
+                $filePath = 'views/user_list/user_list_template_en.xlsx';
+            }
+            $spreadsheet = $reader->load(APPPATH . $filePath);
+            $profiles = $this->Profile_model->getProfile();
+            $data = [];
+            foreach ($profiles as $profile) {
+                $temp = [];
+                $temp['employee_id'] = $profile['employee_id'];
+                $temp['fullname'] = $profile['name'];
+                $temp['birthday'] = $profile['birthday'];
+                if ($profile['gender'] === '1') {
+                    $temp['gender'] = 'Male';
+                } else {
+                    $temp['gender'] = 'Female';
+                }
+                $temp['address'] = $profile['address'];
+                $temp['email'] = $profile['email'];
+                $temp['mobile'] = $profile['mobile'];
+                $data[] = $temp;
+            }
+            // var_dump($data);
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->insertNewRowBefore(3, count($data));
+            $sheet->fromArray($data, NULL, 'A2');
+            $spreadsheet->setActiveSheetIndex(0);
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
+            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename="user_list.xlsx"');
+            header('Cache-Control: max-age=0');
+            $writer->save('php://output');
+        }
 
         /**
          * Image check
@@ -434,7 +475,7 @@
                 $dataUser = array_merge($dataUser, $profileId);
                 $this->User_model->addUser($dataUser);
                 $this->db->trans_complete();
-                $data['message'] = lang('add_user').' '. $profile['employee_id'];
+                $data['message'] = lang('add_user_success').' '. $profile['employee_id'];
                 $this->showAddView($data);
             } catch (Exception $e) {
                 echo $e;

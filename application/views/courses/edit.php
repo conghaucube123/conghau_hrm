@@ -11,6 +11,9 @@
         border-radius: 5px;
         padding: 10px;
     }
+    #success-message {
+        display: none;
+    }
     .table-container {
         border: #f1f1f1f1 2px solid;
         border-radius: 5px;
@@ -74,12 +77,11 @@
     <h3><?php echo lang('course_info'); ?></h3>
     <!-- Course detail input -->
     <div class="course-detail">
-        <form class="form-horizontal form-label-left" role="form" action="<?php echo $this->uri->segment('3'); ?>" method="post" onsubmit="return validateCourse()">
+        <form id="course-info" class="form-horizontal form-label-left" role="form" action="<?php echo $this->uri->segment('3'); ?>" method="post" onsubmit="return validateCourse()">
             <div class="form-group">
                 <div class="col-md-12 col-sm-12 col-xs-11" id="btn">
                     <div class="col-md-12 col-sm-12 col-xs-7" style="text-align: right;">
                         <button type="button" class="btn btn-primary" style="color:#ffffff;" onclick="window.history.back();"><i class="fa fa-arrow-left"></i> <?php echo lang('back'); ?></button>
-                        <!-- <button type="button" class="btn btn-warning" style="color:#ffffff;"><i class="fas fa-upload"></i> <?php echo lang('upload'); ?></button> -->
                         <button type="submit" class="btn btn-success" style="color:#ffffff;"><i class="far fa-save"></i> <?php echo lang('save'); ?></button>
                     </div>
                 </div>
@@ -177,20 +179,16 @@
     <!-- Datatable serverside -->
     <div class="table-container">  
         <h4><?php echo lang('employee_list'); ?></h4>
-        <div class="">
-            <?php
-                if (isset($employee_message) && !empty($employee_message)) {
-                    echo '       
-                        <div class="alert alert-success alert-dismissible">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="close"><i class="fas fa-times"></i></button>
-                            <strong><i class="fas fa-check"></i> '.$employee_message.'</strong>
-                        </div>';
-                }
-            ?>
+        <div id="success-message">
+            <div class="alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-label="close"><i class="fas fa-times"></i></button>
+                <strong id="message"></strong>
+            </div>
         </div>
         <div class="add">
+            <button type="button" class="btn btn-success" style="color:#ffffff;" data-toggle="modal" data-target="#addEmployeeModal"><i class="fas fa-plus"></i> <?php echo lang('add'); ?></button>
             <button type="button" class="btn btn-warning" style="color:#ffffff;" data-toggle="modal" data-target="#uploadEmployeeFileModal"><i class="fas fa-upload"></i> <?php echo lang('upload'); ?></button>
-            <button type="button" class="btn btn-success" style="color:#ffffff;" data-toggle="modal" data-target="#addEmployeeModal" ><i class="fas fa-plus"></i> <?php echo lang('add'); ?></button>
+            <button type="button" id="export-employee-list-template" class="btn btn-info" style="color:#ffffff;"><i class="fas fa-file-export"></i> <?php echo lang('template'); ?></button>
         </div>
         <table id="employeeTable" class="table table-bordered display compact" width="100%">
             <thead>
@@ -214,13 +212,16 @@
     <div id="addEmployeeModal" class="modal">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form role="form" action="<?php echo $this->uri->segment('3'); ?>" method="post" onsubmit="return validateEmployee()">
+                <form role="form" action="" method="post">
                     <div class="modal-header"  style="text-align: center;">
-                        <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        <button type="button" id="close-add" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
                         <h4 class="modal-title"><?php echo lang('add_employee') ?></h4>
                     </div>
                     <div class="modal-body">
                         <div class="container">
+                            <div id="add-processing">
+                                <button class="btn btn-default"><i class="fas fa-spinner"></i> Loading...</button>
+                            </div>
                             <div class="row">
                                 <div class="col-md-2 col-sm-9">
                                     <div  class="form-group">
@@ -231,15 +232,9 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-9">
-                                    <div class="form-group">
+                                    <div class="form-group" id="employee-id-error">
                                         <label for="employeeId_"><?php echo lang('employee_id_1'); ?><sup style="color: red;">*</sup>:</label>
                                         <input type="text" class="flexdatalist form-control" id="employeeId_" name="employeeId_" value="" data-data='<?php echo base_url('Courses/getProfileData') ?>' data-search-in='employeeId' data-min-length='0'>
-                                        <span class="error-message">Error message</span>
-                                        <?php
-                                            if (isset($profileId) && !empty($profileId)) {
-                                                echo '<div style="color:red">'.$profileId.'</div>';
-                                            }
-                                        ?>
                                     </div>
                                     <div class="form-group">
                                         <label for="birthday_"><?php echo lang('birthday_1'); ?>: </label>
@@ -282,14 +277,13 @@
                                         <textarea class="form-control" id="address_" name="address_" rows="3"></textarea>
                                     </div>
                                     <input type="hidden" class="form-control" id="profileId_" name="profileId_" value="">
-                                    <input type="hidden" class="form-control" id="courseName_" name="courseName_" value="<?php echo $course['name']; ?>">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-success" style="color:#ffffff" id="save"><i class="far fa-save"></i> <?php echo lang('save'); ?></button>
-                        <button type="button" class="btn btn-danger" style="color:#ffffff" data-dismiss="modal"><i class="fas fa-times"></i> <?php echo lang('cancle'); ?></button>
+                        <button type="button" id="save-add" class="btn btn-success" style="color:#ffffff" onclick=""><i class="far fa-save"></i> <?php echo lang('save'); ?></button>
+                        <button type="button" id="cancle-add" class="btn btn-danger" style="color:#ffffff" data-dismiss="modal"><i class="fas fa-times"></i> <?php echo lang('cancle'); ?></button>
                     </div>
                 </form>
             </div>
@@ -297,19 +291,19 @@
     </div>
 
     <!-- Upload Employee file -->
-    <div id="uploadEmployeeFileModal" class="modal">
+    <div id="uploadEmployeeFileModal" class="modal fade">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
                     <div class="modal-header" style="text-align: center;">
-                        <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        <button type="button" id="close-upload" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
                         <h4 class="modal-title"><?php echo lang('upload_employee_list') ?></h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="form-group">
                                 <label for="file-upload-employee-list" class="col-sm-2 control-label"><?php echo $this->lang->line('excel_file'); ?><sup style="color: red;">*</sup></label>
-                                <div class="col-sm-9">
+                                <div class="col-sm-9" id="upload-error">
                                     <div class="input-group file">
                                         <input id="file-upload-employee-list" type="text" class="form-control" name="file-upload-employee-list" placeholder="<?php echo $this->lang->line('file_name'); ?>" readonly>
                                         <span id="choose-file-employee-list" class="btn btn-primary input-group-addon" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"><?php echo $this->lang->line('choose_file'); ?></span>
@@ -317,11 +311,14 @@
                                     <input type="file" id="file-upload-employee-list-hidden" name="file-upload-employee-list-hidden" style="display:none" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                                 </div>
                             </div>
+                            <div id="upload-processing">
+                                <button class="btn btn-default"><i class="fas fa-spinner"></i> Loading...</button>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" style="color:#ffffff;"><i class="fas fa-upload"></i> <?php echo lang('upload'); ?></button>
-                        <button type="button" class="btn btn-danger" style="color:#ffffff;" data-dismiss="modal"><i class="fas fa-times"></i> <?php echo lang('cancle'); ?></button>
+                        <button type="button" id="upload-file" class="btn btn-success" style="color:#ffffff;"><i class="fas fa-upload"></i> <?php echo lang('upload'); ?></button>
+                        <button type="button" id="cancle-upload" class="btn btn-danger" style="color:#ffffff;" data-dismiss="modal"><i class="fas fa-times"></i> <?php echo lang('cancle'); ?></button>
                     </div>
                 </form>
             </div>
@@ -329,7 +326,7 @@
     </div>
 
     <!-- Delete user successfully -->
-    <div id="deleteSuccessModal" class="modal">
+    <div id="deleteSuccessModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -346,7 +343,7 @@
     </div>
 
     <!-- The delete modal -->
-    <div id="deleteModal" class="modal">
+    <div id="deleteModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -356,7 +353,7 @@
                     <h4 class="modal-title" id="confirm-delete-title"></h4>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" style="color:#ffffff" id="confirm-delete" onclick="deleteOnclick()"><i class="fas fa-check"></i> <?php echo lang('yes'); ?></button>
+                    <button type="button" class="btn btn-success" style="color:#ffffff" id="confirm-delete"><i class="fas fa-check"></i> <?php echo lang('yes'); ?></button>
                     <button type="button" class="btn btn-danger" style="color:#ffffff" data-dismiss="modal"><i class="fas fa-times"></i> <?php echo lang('no'); ?></button>
                 </div>
             </div>
@@ -406,17 +403,293 @@
             }
         });
 
-        // Show avatar and add file name to input box
+        // Submit change Course information
+        $('#course-info').on('submit', function(evt) {
+            // evt.preventDefault();
+            // const formEl = $('<form/>', {
+            //     action: '<?php echo base_url('Courses/edit/') . $this->uri->segment('3'); ?>',
+            //     method: 'POST',
+            //     id: 'virtual-course-info-form',
+            // });
+            // formEl.append($('<input/>', {
+            //     type: 'hidden',
+            //     name: 'name',
+            //     value: $('#name').val(),
+            // }));
+            // formEl.append($('<input/>', {
+            //     type: 'hidden',
+            //     name: 'time',
+            //     value: $('#time').val(),
+            // }));
+            // if ($('#course').is(":checked")) {
+            //     formEl.append($('<input/>', {
+            //         type: 'hidden',
+            //         name: 'type',
+            //         value: $('#course').val(),
+            //     }));
+            // } else {
+            //     formEl.append($('<input/>', {
+            //         type: 'hidden',
+            //         name: 'type',
+            //         value: $('#event').val(),
+            //     }));
+            // }
+            // formEl.append($('<input/>', {
+            //     type: 'hidden',
+            //     name: 'startDate',
+            //     value: $('#startDate').val(),
+            // }));
+            // formEl.append($('<input/>', {
+            //     type: 'hidden',
+            //     name: 'endDate',
+            //     value: $('#endDate').val(),
+            // }));
+            // var weekDays = [];
+            // if ($('#mon').is(":checked")) {
+            //     weekDays.push($('#mon').val());
+            // }
+            // if ($('#tue').is(":checked")) {
+            //     weekDays.push($('#tue').val());
+            // }
+            // if ($('#wed').is(":checked")) {
+            //     weekDays.push($('#wed').val());
+            // }
+            // if ($('#thu').is(":checked")) {
+            //     weekDays.push($('#thu').val());
+            // }
+            // if ($('#fri').is(":checked")) {
+            //     weekDays.push($('#fri').val());
+            // }
+            // if ($('#sta').is(":checked")) {
+            //     weekDays.push($('#sta').val());
+            // }
+            // if ($('#sun').is(":checked")) {
+            //     weekDays.push($('#sun').val());
+            // }
+            // formEl.append($('<input/>', {
+            //     type: 'hidden',
+            //     name: 'weekDays[]',
+            //     value: weekDays,
+            // }));
+            // formEl.hide().appendTo('body').submit();
+            // formEl.detach();
+            
+            // var formData = new FormData();
+            // var weekDays = [];
+            // if ($('#mon').is(":checked")) {
+            //     weekDays.push($('#mon').val());
+            // }
+            // if ($('#tue').is(":checked")) {
+            //     weekDays.push($('#tue').val());
+            // }
+            // if ($('#wed').is(":checked")) {
+            //     weekDays.push($('#wed').val());
+            // }
+            // if ($('#thu').is(":checked")) {
+            //     weekDays.push($('#thu').val());
+            // }
+            // if ($('#fri').is(":checked")) {
+            //     weekDays.push($('#fri').val());
+            // }
+            // if ($('#sta').is(":checked")) {
+            //     weekDays.push($('#sta').val());
+            // }
+            // if ($('#sun').is(":checked")) {
+            //     weekDays.push($('#sun').val());
+            // }
+            // formData.append('name', $('#name').val());
+            // formData.append('time', $('#time').val());
+            // if ($('#course').is(":checked")) {
+            //     formData.append('type', $('#course').val());
+            // } else {
+            //     formData.append('type', $('#event').val());
+            // }
+            // formData.append('startDate', $('#startDate').val());
+            // formData.append('endDate', $('#endDate').val());
+            // formData.append('weekDays', weekDays);
+            // var request = new XMLHttpRequest()
+            // request.open("post", '<?php echo $this->uri->segment('3'); ?>', true);
+            // request.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            // request.send(formData);
+        });
+        setTimeout(function () {
+            $('#virtual-course-info-form').remove();
+        }, 3000);
+        
+        // Aotucomplete Employee ID when click Add button
+        $('#employeeId_').flexdatalist({
+            minLength: 0,
+            searchIn: 'employeeId',
+            data: '<?php echo base_url('Courses/getProfileData') ?>',
+        }).on('select:flexdatalist', function(event, data) {
+            console.log($('#employeeId_').val());
+            $('#employeeId_').val(data.employeeId);
+            if ((data.image != null) && (data.image != '')) {
+                url = '<?php echo base_url('public/images/'); ?>' + data.image;
+                $('#avatar-image').attr('src', url);
+            }
+            $('#birthday_').val(data.birthday);
+            $('#fullname_').val(data.name);
+            $('#mobile_').val(data.mobile);
+            $('#email_').val(data.email);
+            $('#address_').val(data.address);
+            if (data.gender === '1') {
+                $('#male_').attr('checked', 'checked');
+            } else {
+                $('#female_').attr('checked', 'checked');
+            }
+            $('#profileId_').val(data.id);
+        });
+
+        // Unset value and error when change Employee ID or close modal
+        function unsetEmployeeId() {
+            $('.data-add-error').remove();
+            $('#avatar-image').attr('src', '<?php echo base_url('images/user-2.png'); ?>');
+            $('#employeeId_').val('')
+            $('#birthday_').val('');
+            $('#fullname_').val('');
+            $('#mobile_').val('');
+            $('#email_').val('');
+            $('#address_').val('');
+            $('#male_').removeAttr('checked');
+            $('#female_').removeAttr('checked');
+            $('#profileId_').val('');
+        }
+
+        $('#employeeId_').on('change', function() {
+            $('.data-add-error').remove();
+            if ($('#employeeId_').val() === '') {
+                unsetEmployeeId();
+            }
+        });
+
+        $(document).on('click', function(event) {
+            if ($('#addEmployeeModal').is(event.target) && $(event.target).closest('#addEmployeeModal').length) {
+                unsetEmployeeId();
+            }
+            if (!$('#uploadEmployeeFileModal').is(event.target) && ($('#uploadEmployeeFileModal').has(event.target).length === 0)) {
+                unsetFileUpload();
+            }
+        });
+
+        $("#close-add, #cancle-add").on('click', function() {
+            unsetEmployeeId();
+        });
+
+        // Submit form add Employee
+        $('#save-add').on('click', function() {
+            if ($('#employeeId_').val() === '') {
+                $('#employee-id-error').append('<span class="data-add-error" style="color:red"><?php echo lang('EMPLOYEEID005'); ?></span><br class="data-add-error">');
+            } else {
+                $('#add-processing').css('display', 'block');
+                var formData = new FormData();
+                formData.append('courseId_', '<?php echo $course['id']; ?>');
+                formData.append('courseName_', '<?php echo $course['name']; ?>');
+                formData.append('profileId_', $('#profileId_').val());
+                formData.append('fullname_', $('#fullname_').val());
+                $.ajax({
+                    url: '<?php echo base_url('Courses/addEmployee')?>',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json',
+                    success: function(response){
+                        $('#add-processing').css('display', 'none');
+                        if (!response.success) {
+                            var arr = response.message.split('<br>');
+                            arr.forEach(function(element) {
+                                if (element != '') {
+                                    $('#employee-id-error').append('<span class="data-add-error" style="color:red">' + element + '</span><br class="data-add-error">');
+                                }
+                            });
+                            
+                        } else {
+                            $('#addEmployeeModal').modal('hide');
+                            employeeTable.ajax.reload();
+                            $('#message').html('<i class="fas fa-check"></i> ' + response.message);
+                            $('#success-message').css('display', 'block');
+                            unsetEmployeeId();
+                        }
+                    }
+                });
+            }
+        });
+
+        // Add file name to input box
         $('#file-upload-employee-list').css('cursor', 'pointer');
         $("#choose-file-employee-list, #file-upload-employee-list").on("click", function() {
             $("#file-upload-employee-list-hidden").trigger("click");
         });
-        $("#file-upload-employee-list-hidden").change(function() {
-            if(this.value.length > 0){
+
+        // Choose file Employee list
+        $("#file-upload-employee-list-hidden").on('change', function() {
+            if(this.value.length > 0) {
                 var pathFile = this.value.replace(/^.*[\\\/]/, '');
                 $("#file-upload-employee-list").val(pathFile);
+            } else {
+                $("#file-upload-employee-list").val('<?php echo $this->lang->line('file_name'); ?>');
             }
-            
+            $('.data-upload-error').remove();
+        });
+
+        // Unset value and error when close modal
+        function unsetFileUpload()
+        {
+            $("#file-upload-employee-list").val('<?php echo $this->lang->line('file_name'); ?>');
+            $('.data-upload-error').remove();
+            $('#file-upload-employee-list-hidden').val('');
+        }
+
+        // Unset value and error when close upload file Employee list
+        $("#close-upload, #cancle-upload").on('click', function() {
+            unsetFileUpload();
+        });
+
+        // Upload file Employee list
+        $('#upload-file').on('click', function() {
+            if ($('#file-upload-employee-list-hidden')[0].files[0] === undefined) {
+                $('#upload-error').append('<span class="data-upload-error" style="color:red"><?php echo lang('UPLOAD001'); ?></span><br class="data-upload-error">');
+            } else {
+                $('#upload-processing').css('display', 'block');
+                var formData = new FormData();
+                formData.append('file-upload-employee-list-hidden', $('#file-upload-employee-list-hidden')[0].files[0]);
+                formData.append('courseId', '<?php echo $course['id']; ?>');
+                $.ajax({
+                    url: '<?php echo base_url('Courses/upload')?>',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json',
+                    success: function(response){
+                        $('#upload-processing').css('display', 'none');
+                        if (!response.success) {
+                            var arr = response.message.split('<br>');
+                            arr.forEach(function(element) {
+                                if (element != '') {
+                                    $('#upload-error').append('<span class="data-upload-error" style="color:red">' + element + '</span><br class="data-upload-error">');
+                                }
+                            });
+                        } else {
+                            $('#uploadEmployeeFileModal').modal('hide');
+                            employeeTable.ajax.reload();
+                            $('#message').html('<i class="fas fa-check"></i> ' + response.message);
+                            $('#success-message').css('display', 'block');
+                            unsetFileUpload();
+                        }
+                    }
+                });
+            }
+        });
+
+        // Export Employee list template
+        $('#export-employee-list-template').on('click', function() {
+            var form = $('<form/>', {
+                action: '<?php echo base_url('Courses/exportEmployeeListTemplate'); ?>',
+                method: 'post',
+            });
+            form.appendTo('body').submit();
         });
 
         // Get data for Course list datatable serverside
@@ -427,7 +700,7 @@
         } else {
             var languageUrl = '//cdn.datatables.net/plug-ins/1.13.4/i18n/en-GB.json';
         }
-        $('#employeeTable').DataTable({
+        var employeeTable = $('#employeeTable').DataTable({
             fixedHeader: true,
             scrollCollapse: true,
             scrollX: "100%", 
@@ -512,67 +785,15 @@
 
         $('[data-toggle="tooltip"]').tooltip();
 
-        // Show error when add duplicate Employee to Course Detail
-        var errorMessage = '<?php
-                                if (isset($profileId) && !empty($profileId)) {
-                                    echo $profileId;
-                                } else {
-                                    echo '';
-                                }
-                            ?>';
-        if (errorMessage != '') {
-            $('#addEmployeeModal').modal('show');
-        }
-        
-        // Aotucomplete Employee ID when click Add button
-        $('#employeeId_').flexdatalist({
-            minLength: 0,
-            searchIn: 'employeeId',
-            data: '<?php echo base_url('Courses/getProfileData') ?>',
-        }).on('select:flexdatalist', function(event, data) {
-            // console.log(data);
-            if ((data.image != null) && (data.image != '')) {
-                url = '<?php echo base_url('public/images/'); ?>' + data.image;
-                $('#avatar-image').attr('src', url);
-            }
-            $('#birthday_').val(data.birthday);
-            $('#fullname_').val(data.name);
-            $('#mobile_').val(data.mobile);
-            $('#email_').val(data.email);
-            $('#address_').val(data.address);
-            if (data.gender === '1') {
-                $('#male_').attr('checked', 'checked');
-            } else {
-                $('#female_').attr('checked', 'checked');
-            }
-            $('#profileId_').val(data.id);
-        });
-
-        $('#employeeId_').on('change', function() {
-            // console.log($('#employeeId_').val());
-            if ($('#employeeId_').val() == '') {
-                $('#avatar-image').attr('src', '<?php echo base_url('images/user-2.png'); ?>');
-                $('#birthday_').val('');
-                $('#fullname_').val('');
-                $('#mobile_').val('');
-                $('#email_').val('');
-                $('#address_').val('');
-                $('#male_').removeAttr('checked');
-                $('#female_').removeAttr('checked');
-                $('#profileId_').val('');
-            }
-        });
-
         // Show delete modal
         $('#deleteModal').on('show.bs.modal', function (e) {
             const rowData = e.relatedTarget;
-            // console.log(rowData);
             $('#confirm-delete').attr({'name': rowData.profileId, 'value': rowData.courseId});
             $('#confirm-delete-title').html('<?php echo lang('DELETE002'); ?> '+ rowData.name +'?');
         })
 
         // When click Yes in delete modal
-        function deleteOnclick() {
+        $('#confirm-delete').on('click', function() {
             var profileId = $('#confirm-delete').attr('name');
             var courseId = $('#confirm-delete').attr('value');
             $.ajax({
@@ -583,23 +804,21 @@
                     profileId: profileId,
                     courseId: courseId,
                 },
-                success: function(result) {
+                success: function(response) {
                     $('#deleteModal').modal('hide');
-                    $('#deleteSuccessModal').modal('show', result.message);
+                    $('#deleteSuccessModal').modal('show', response.message);
                 },
             });
-        }
+        });
 
         // Show if delete user successfully
         $('#deleteSuccessModal').on('show.bs.modal', function (e) {
-            console.log(e.relatedTarget);
             $('#delete-message').html(e.relatedTarget);
         })
     });
 
     // Initialize variable to validate
     const nameEle = document.getElementById('name');
-    const employeeIdEle = document.getElementById('employeeId_');
 
     // Validate when user click "Save" button in Course information and have some error
     function validateCourse() {
@@ -609,38 +828,6 @@
         }
         return true;
     };
-
-    // Validate when user click "Add" button in Employee list and have some error
-    function validateEmployee() {
-        let employeeId = validateEmployeeId();
-        if (!employeeId) {
-            return false;
-        }
-        return true;
-    };
-
-    // Validate Employee ID
-    function validateEmployeeId()
-    {
-        let parentEle = employeeIdEle.parentNode;
-        parentEle.classList.remove('success', 'error');
-        return checkEmployeeId();
-    }
-
-    function checkEmployeeId()
-    {
-        let employeeIdValue = employeeIdEle.value;
-        let isCheck = true;
-
-        if (employeeIdValue == '') {
-            setError(employeeIdEle, '<?php echo lang('EMPLOYEEID005'); ?>');
-            isCheck = false;
-        } else {
-            setSuccess(employeeIdEle);
-        }
-
-        return isCheck;
-    }
 
     // Validate Course Name
     function validateName()

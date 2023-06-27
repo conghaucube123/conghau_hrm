@@ -302,12 +302,41 @@
                 background-color: #fff;
                 padding: 7px;
                 position: absolute;
-                z-index: 2000;
+                z-index: 9999;
             }
             #userTable_processing div,
             #courseTable_processing div,
             #employeeTable_processing div {
                 display: none;
+            }
+            #add-processing {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 200px;
+                margin-left: -100px;
+                margin-top: -26px;
+                text-align: center;
+                display: none;
+                z-index: 9999;
+            }
+            #upload-processing {
+                text-align: center;
+                display: none;
+                z-index: 9999;
+            }
+            .fa-spinner {
+                animation: spin 1s infinite linear;
+                -webkit-animation: spin2 1s infinite linear;
+            }
+            @-webkit-keyframes spin2 {
+                from { -webkit-transform: rotate(0deg);}
+                to { -webkit-transform: rotate(360deg);}
+            }
+
+            @keyframes spin {
+                from { transform: scale(1) rotate(0deg);}
+                to { transform: scale(1) rotate(360deg);}
             }
             .dataTables_length {
                 font-weight: normal;

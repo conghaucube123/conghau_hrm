@@ -99,6 +99,7 @@
         <h3><?php echo lang('user_list'); ?></h3>
         <div class="add">
             <a href="add" class="btn btn-success" style="color:#ffffff;"><i class="fas fa-plus"></i> <?php echo lang('register'); ?></a>
+            <button type="button" id="export-user-list" class="btn btn-warning" style="color:#ffffff;"><i class="fas fa-file-excel"></i> Excel</button>
         </div>
         <table id="userTable" class="table table-bordered display compact" width="100%">
             <thead>
@@ -119,7 +120,7 @@
     </div>
     
     <!-- The user info modal -->
-    <div id="infoModal" class="modal">
+    <div id="infoModal" class="modal fade">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header"  style="text-align: center;">
@@ -211,8 +212,8 @@
     </div>
 
     <!-- Delete user successfully -->
-    <div id="deleteSuccessModal" class="modal">
-        <div class="modal-dialog modal-sm">
+    <div id="deleteSuccessModal" class="modal fade">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <a class="close" href="<?php echo base_url('User_list/list'); ?>"><i class="fas fa-times"></i></a>
@@ -228,7 +229,7 @@
     </div>
 
     <!-- The delete modal -->
-    <div id="deleteModal" class="modal">
+    <div id="deleteModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -238,7 +239,7 @@
                     <h4 class="modal-title" id="confirm-delete-title"></h4>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" style="color:#ffffff" id="confirm-delete" onclick="deleteOnclick()"><i class="fas fa-check"></i> <?php echo lang('yes'); ?></button>
+                    <button type="button" class="btn btn-success" style="color:#ffffff" id="confirm-delete"><i class="fas fa-check"></i> <?php echo lang('yes'); ?></button>
                     <button type="button" class="btn btn-danger" style="color:#ffffff" data-dismiss="modal"><i class="fas fa-times"></i> <?php echo lang('no'); ?></button>
                 </div>
             </div>
@@ -248,6 +249,15 @@
            
 <script>
     $( function () {
+        // Export User list
+        $('#export-user-list').on('click', function() {
+            var form = $('<form/>', {
+                action: '<?php echo base_url('User_list/exportUserList'); ?>',
+                method: 'post',
+            });
+            form.appendTo('body').submit();
+        });
+
         // Get data for User list datatable serverside
         if ($('#available').is(":checked")) {
             var available = $('#available').val();
@@ -367,7 +377,6 @@
         // Show user information modal when click Employee ID
         $('#infoModal').on('show.bs.modal', function (e) {
             const rowData = e.relatedTarget;
-            console.log(rowData);
             var url = '';
             if ((rowData.image != null) && (rowData.image != '')) {
                 url = '<?php echo base_url('public/images/'); ?>' + rowData.image;
@@ -399,7 +408,7 @@
         })
 
         // When click Yes in delete modal
-        function deleteOnclick() {
+        $('#confirm-delete').on('click', function() {
             var id = $('#confirm-delete').attr('name');
             var loginId = $('#confirm-delete').attr('value');
             $.ajax({
@@ -410,12 +419,12 @@
                     id: id,
                     login_id: loginId,
                 },
-                success: function(result) {
+                success: function(response) {
                     $('#deleteModal').modal('hide');
-                    $('#deleteSuccessModal').modal('show', result.message);
+                    $('#deleteSuccessModal').modal('show', response.message);
                 },
             });
-        }
+        });
 
         // Show if delete user successfully
         $('#deleteSuccessModal').on('show.bs.modal', function (e) {

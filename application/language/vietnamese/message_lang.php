@@ -52,6 +52,11 @@
     // Course Type
     $lang["C_TYPE001"] = "Hãy chọn Loại khóa học!";
     // Profile ID
-    $lang["PROFILEID001"] = "Nhân viên này đã tham gia khóa học.";
+    $lang["PROFILEID001"] = "Nhân viên đã tham gia khóa học nay.";
     // Upload file
-    $lang["UPLOAD001"] = "Hãy chọn file của bạn";
+    $lang["UPLOAD001"] = "Hãy chọn tập tin của bạn!";
+    $lang["UPLOAD002"] = "Dòng";
+    $lang["UPLOAD003"] = "Mã nhân viên không được để trống!";
+    $lang["UPLOAD004"] = "Email không được để trống!";
+    $lang["UPLOAD006"] = "Danh sách dữ liệu bị lỗi được hiển thị như dưới đây";
+    $lang["UPLOAD007"] = "Lỗi";

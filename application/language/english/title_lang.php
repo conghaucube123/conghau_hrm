@@ -33,6 +33,7 @@
     $lang["no"] = "No";
     $lang["upload"] = "Upload";
     $lang["cancle"] = "Cancle";
+    $lang["template"] = "Template";
     // Other
     $lang["login_id"] = "LOGIN ID";
     $lang["gender"] = "GENDER";

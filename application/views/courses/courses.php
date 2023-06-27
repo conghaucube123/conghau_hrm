@@ -160,8 +160,8 @@
     </div>
 
     <!-- Delete user successfully -->
-    <div id="deleteSuccessModal" class="modal">
-        <div class="modal-dialog modal-sm">
+    <div id="deleteSuccessModal" class="modal fade">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <a class="close" href="<?php echo base_url('Courses/courses'); ?>"><i class="fas fa-times"></i></a>
@@ -177,7 +177,7 @@
     </div>
 
     <!-- The delete modal -->
-    <div id="deleteModal" class="modal">
+    <div id="deleteModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -187,7 +187,7 @@
                     <h4 class="modal-title" id="confirm-delete-title"></h4>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" style="color:#ffffff" id="confirm-delete" onclick="deleteOnclick()"><i class="fas fa-check"></i> <?php echo lang('yes'); ?></button>
+                    <button type="button" class="btn btn-success" style="color:#ffffff" id="confirm-delete"><i class="fas fa-check"></i> <?php echo lang('yes'); ?></button>
                     <button type="button" class="btn btn-danger" style="color:#ffffff" data-dismiss="modal"><i class="fas fa-times"></i> <?php echo lang('no'); ?></button>
                 </div>
             </div>
@@ -371,7 +371,7 @@
         })
 
         // When click Yes in delete modal
-        function deleteOnclick() {
+        $('#confirm-delete').on('click', function() {
             var name = $('#confirm-delete').attr('name');
             var id = $('#confirm-delete').attr('value');
             $.ajax({
@@ -382,13 +382,13 @@
                     id: id,
                     name: name,
                 },
-                success: function(result) {
+                success: function(response) {
                     $('#deleteModal').modal('hide');
-                    $('#deleteSuccessModal').modal('show', result.message);
+                    $('#deleteSuccessModal').modal('show', response.message);
                 },
             });
-        }
-
+        });
+        
         // Show if delete user successfully
         $('#deleteSuccessModal').on('show.bs.modal', function (e) {
             console.log(e.relatedTarget);
