@@ -1,6 +1,6 @@
 <?php
     // Side bar
-    $lang["home"] = "Trang chủ";
+    $lang["dashboard"] = "Thống kê";
     $lang["user_list"]= "Danh sách người dùng";
     $lang["courses"] = "Khóa học";
     // Link
@@ -11,12 +11,15 @@
     $lang["forgot_password"] = "Quên mật khẩu";
     // Header
     $lang["user_info"] = "Thông Tin Người Dùng";
-    $lang["add_user"] = "Thêm Người Dùng";
+    $lang["add_new_user"] = "Thêm Người Dùng";
     $lang["course_info"] = "Thông Tin Khóa Học";
     $lang["employee_list"] = "Danh Sách Nhân Viên";
-    $lang["add_course"] = "Thêm Khóa Học";
+    $lang["add_new_course"] = "Thêm Khóa Học";
     $lang["add_employee"] = "Thêm Nhân Viên";
     $lang["upload_employee_list"] = "Tải Danh Sách Nhân Viên";
+    $lang["user_gender"] = "Giới Tính Người Dùng";
+    $lang["user_status"] = "Trạng Thái Người Dùng";
+    $lang["user_login"] = "Số Người Dùng Đăng Nhập Trong Tuần";
     // Button
     $lang["login"] = "Đăng nhập";
     $lang["search"] = "Tìm kiếm";
@@ -59,6 +62,7 @@
     $lang["fullname_1"] = "Họ và tên";
     $lang["image_1"] = "Ảnh đại diện";
     $lang["password"] = "Mật khẩu";
+    $lang["new_password"] = "Mật khẩu mới";
     $lang["confirm_password"] = "Xác nhận mật khẩu";
     $lang["contract_type"] = "Loại hợp đồng";
     $lang["birthday_1"] = "Ngày sinh";
@@ -89,4 +93,7 @@
     $lang["end_date_1"] = "Ngày kết thúc";
     $lang["file_name"] = "Tên tập tin";
     $lang["excel_file"] = "Tập tin excel";
-    $lang["choose_file"] = "Chọn Tập Tin";
+    $lang["choose_file"] = "Chọn tập tin";
+    $lang["days"] = "Thứ";
+    $lang["times"] = "Số lần";
+    $lang["recent"] = "Gần đây";

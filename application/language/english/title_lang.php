@@ -1,6 +1,6 @@
 <?php
     // Side bar
-    $lang["home"] = "Home";
+    $lang["dashboard"] = "Dashboard";
     $lang["user_list"]= "User list";
     $lang["courses"] = "Courses";
     // Link
@@ -11,12 +11,15 @@
     $lang["forgot_password"] = "Forgot password";
     // Header
     $lang["user_info"] = "User Information";
-    $lang["add_user"] = "Add User";
+    $lang["add_new_user"] = "Add User";
     $lang["course_info"] = "Course Information";
     $lang["employee_list"] = "Employee List";
-    $lang["add_course"] = "Add Course";
+    $lang["add_new_course"] = "Add Course";
     $lang["add_employee"] = "Add Employee";
     $lang["upload_employee_list"] = "Upload Employee List";
+    $lang["user_gender"] = "User Gender";
+    $lang["user_status"] = "User Status";
+    $lang["user_login"] = "User Login In Week";
     // Button
     $lang["login"] = "Login";
     $lang["search"] = "Search";
@@ -59,6 +62,7 @@
     $lang["fullname_1"] = "Full name";
     $lang["image_1"] = "Face image";
     $lang["password"] = "Password";
+    $lang["new_password"] = "New password";
     $lang["confirm_password"] = "Confirm password";
     $lang["contract_type"] = "Contract type";
     $lang["birthday_1"] = "Birthday";
@@ -90,3 +94,6 @@
     $lang["file_name"] = "File name";
     $lang["excel_file"] = "Excel file";
     $lang["choose_file"] = "Choose File";
+    $lang["days"] = "Week days";
+    $lang["times"] = "Times";
+    $lang["recent"] = "Recent";

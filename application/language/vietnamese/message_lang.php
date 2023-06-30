@@ -9,7 +9,9 @@
     $lang["PASSWORD002"] = "Mật khẩu phải chứa ít nhất 8 ký tự.";
     $lang["PASSWORD003"] = "Chiều dài tối đa của Mật khẩu là ký tự.";
     $lang["PASSWORD004"] = "Mật khẩu phải chứa ít nhất 1 ký tự thường, 1 ký tự in hoa, 1 chữ số, và 1 ký tự đặt biệt.";
-    $lang["PASSWORD004"] = "Xác nhận lại mật khẩu không khớp.";
+    $lang["PASSWORD005"] = "Xác nhận lại mật khẩu không khớp.";
+    $lang["PASSWORD006"] = "Hãy điền Mật khẩu mới của bạn!";
+    $lang["PASSWORD007"] = "Mật khảu bạn nhập không đúng!";
     // Full name
     $lang["FULLNAME001"] = "Hãy điền Họ và tên của bạn!";
     $lang["FULLNAME002"] = "Chiều dài tối đa của Họ và tên là 255 ký tự.";
@@ -59,4 +61,5 @@
     $lang["UPLOAD003"] = "Mã nhân viên không được để trống!";
     $lang["UPLOAD004"] = "Email không được để trống!";
     $lang["UPLOAD006"] = "Danh sách dữ liệu bị lỗi được hiển thị như dưới đây";
-    $lang["UPLOAD007"] = "Lỗi";
+    $lang["UPLOAD007"] = "lỗi";
+    $lang["UPLOAD008"] = "Tập tin của bạn rỗng. Hãy tải tập tin có dữ liệu!";

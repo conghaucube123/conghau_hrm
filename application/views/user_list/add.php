@@ -3,7 +3,7 @@
         width: 100%;
     }
     .form-input {
-        border: #f1f1f1f1 3px solid;
+        border: #f1f1f1f1 2px solid;
         border-radius: 10px;
         padding-top: 30px;
         margin-top: 30px;
@@ -63,48 +63,33 @@
         }
     }
 </style>
+
 <div class="body-container">
     <div class="form-input">
         <form role="form" action="add" method="post" enctype="multipart/form-data" onsubmit="return validate()">
             <div class="row">
-                <div class="col-md-10 col-md-offset-1">
-                    <?php
-                        if (isset($message) && !empty($message)) {
-                            echo '
-                                <div class="form-group">        
-                                    <div class="alert alert-success alert-dismissible">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="close"><i class="fas fa-times"></i></button>
-                                        <strong><i class="fas fa-check"></i> '.$message.'</strong>
-                                    </div>
-                                </div>';
-                        }
-                    ?>
-                </div>
-            </div>
-            <div class="row">
                 <div class="col-md-10  col-md-offset-1">
-                    <h3><?php echo lang('add_user'); ?></h3>
+                    <h3><?php echo lang('add_new_user'); ?></h3>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-10 col-md-offset-1" style="text-align: right;">
                     <div class="form-group">
-                        <button type="button" class="btn btn-primary" style="color:#ffffff;" onclick="window.history.back();"><i class="fa fa-arrow-left"></i> <?php echo lang('back'); ?></button>
-                        <button type="submit" class="btn btn-success" style="color:#ffffff;"><i class="fas fa-plus"></i> <?php echo lang('add'); ?></button>
+                        <button type="button" class="btn btn-info" style="color:#ffffff;" onclick="window.history.back();"><i class="fa fa-arrow-left"></i> <?php echo lang('back'); ?></button>
+                        <button type="submit" class="btn btn-primary" style="color:#ffffff;"><i class="fas fa-plus"></i> <?php echo lang('add'); ?></button>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-2 col-md-offset-1">
                     <div class="form-group">
-                        <label for="image"><?php echo lang('image_1'); ?>:</label>
                         <div id="image">
                             <img src="<?php echo base_url('images/user-2.png'); ?>" class="img-responsive" id="face-image">
                         </div>
                         <div id="upload">
                             <div class="custom-file">
                                 <input type="file" class="form-control" id="customFile" name="avatar" style="visibility: hidden;">
-                                <label class="form-control" id="form-label" for="customFile" style="font-weight: normal;">
+                                <label class="form-control btn btn-default" id="form-label" for="customFile" style="font-weight: normal;">
                                     <i class="fas fa-upload"></i>
                                     <?php echo lang('IMAGE001'); ?>
                                 </label>
@@ -207,14 +192,14 @@
                     <div class="form-group">   
                         <label><?php echo lang('gender_1'); ?>:</label>     
                         <div class="">
-                            <label class="radio-inline" for="male">
+                            <div class="checkbox radio-inline">
                                 <input class="form-check-input" type="radio" name="gender" id="male" value="1" <?php if(isset($genderr) && ($genderr === '1')) echo 'checked="checked"'; ?>>
-                                <?php echo lang('male'); ?>
-                            </label>
-                            <label class="radio-inline" for="female">
+                                <label for="male"><?php echo lang('male'); ?></label>
+                            </div>
+                            <div class="checkbox radio-inline">
                                 <input class="form-check-input" type="radio" name="gender" id="female" value="2" <?php if(isset($genderr) && ($genderr === '2')) echo 'checked="checked"'; ?>>
-                                <?php echo lang('female'); ?>
-                            </label>
+                                <label for="female"><?php echo lang('female'); ?></label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -222,14 +207,14 @@
                     <div class="form-group">   
                         <label><?php echo lang('status_1'); ?>:</label>  
                         <div class="">
-                            <label class="radio-inline" for="available">
+                            <div class="checkbox radio-inline">
                                 <input class="form-check-input" type="radio" name="status" id="available" value="1" <?php if(isset($statusr) && ($statusr === '1')) echo 'checked="checked"'; ?>>
-                                <?php echo lang('available'); ?>
-                            </label>
-                            <label class="radio-inline" for="unavailable">
+                                <label for="available"><?php echo lang('available'); ?></label>
+                            </div>
+                            <div class="checkbox radio-inline">
                                 <input class="form-check-input" type="radio" name="status" id="unavailable" value="2" <?php if(isset($statusr) && ($statusr === '2')) echo 'checked="checked"'; ?>>
-                                <?php echo lang('unavailable'); ?>
-                            </label>
+                                <label for="unavailable"><?php echo lang('unavailable'); ?></label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -414,7 +399,7 @@
         return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s)/.test(password);
     }
 
-    // Check Confirm Password
+    // Validate Confirm Password
     function validateConfirmPassword() {
         let parentEle = confirmPasswordEle.parentNode;
         parentEle.classList.remove('success', 'error');
@@ -671,7 +656,8 @@
         return isCheck;
     }
 
-    function isMobile(number) {
+    function isMobile(number)
+    {
         return /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/.test(number);
     }
 

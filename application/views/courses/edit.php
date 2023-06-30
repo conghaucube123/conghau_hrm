@@ -2,13 +2,14 @@
     .list {
         border: #f1f1f1f1 3px solid;
         border-radius: 20px;
-        padding: 10px;
+        padding: 20px;
         margin-left: 30px;
         margin-right: 30px;
     }
     .course-detail {
         border: #f1f1f1f1 2px solid;
         border-radius: 5px;
+        margin: 20px 0px;
         padding: 10px;
     }
     #success-message {
@@ -17,7 +18,7 @@
     .table-container {
         border: #f1f1f1f1 2px solid;
         border-radius: 5px;
-        margin: 20px 10px;
+        margin: 20px 0px;
         padding: 20px;
     }
     .dataTables_filter { 
@@ -59,10 +60,6 @@
         text-decoration: none;
     }
     @media (max-width: 768px) {
-        /* #btn {
-            float: right;
-            width: 50%;
-        } */
         .col-md-3 img {
             height: 250px;
             width: 250px; 
@@ -73,6 +70,7 @@
         }
     }
 </style>
+
 <div class="list">
     <h3><?php echo lang('course_info'); ?></h3>
     <!-- Course detail input -->
@@ -81,22 +79,9 @@
             <div class="form-group">
                 <div class="col-md-12 col-sm-12 col-xs-11" id="btn">
                     <div class="col-md-12 col-sm-12 col-xs-7" style="text-align: right;">
-                        <button type="button" class="btn btn-primary" style="color:#ffffff;" onclick="window.history.back();"><i class="fa fa-arrow-left"></i> <?php echo lang('back'); ?></button>
-                        <button type="submit" class="btn btn-success" style="color:#ffffff;"><i class="far fa-save"></i> <?php echo lang('save'); ?></button>
+                        <button type="button" class="btn btn-info" style="color:#ffffff;" onclick="window.history.back();"><i class="fa fa-arrow-left"></i> <?php echo lang('back'); ?></button>
+                        <button type="submit" class="btn btn-primary" style="color:#ffffff;"><i class="far fa-save"></i> <?php echo lang('save'); ?></button>
                     </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-10 col-md-offset-1">
-                    <?php
-                        if (isset($course_message) && !empty($course_message)) {
-                            echo '       
-                                <div class="alert alert-success alert-dismissible">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="close"><i class="fas fa-times"></i></button>
-                                    <strong><i class="fas fa-check"></i> '.$course_message.'</strong>
-                                </div>';
-                        }
-                    ?>
                 </div>
             </div>
             <div class="form-group">
@@ -146,7 +131,7 @@
                         $i = 0;
                         foreach ($weekDaysArr as $weekDay) {
                             $checked = in_array($weekDay, $weekDays) ? 'checked = "checked"' : '';
-                            echo '<label class="checkbox-inline"><input type="checkbox" id="'. $weekDaysName[$i] .'" name="weekDays[]" value="'. $weekDay .'"'. $checked .'> '. $weekDay .' </label>';
+                            echo '<div class="checkbox checkbox-inline"><input type="checkbox" id="'. $weekDaysName[$i] .'" name="weekDays[]" value="'. $weekDay .'"'. $checked .'><label for="'. $weekDaysName[$i] .'"> '. $weekDay .' </label></div>';
                             $i = $i + 1;
                         }
                     ?>
@@ -155,14 +140,14 @@
                 <div class="col-md-5 col-sm-4 col-xs-6">
                     <label class="control-label col-md-4 col-sm-5 col-xs-6"><?php echo lang('course_type_1'); ?><sup style="color: red;">*</sup></label>
                     <div class="col-md-8 col-sm-7 col-xs-7">
-                        <label class="radio-inline">
+                        <div class="checkbox radio-inline">
                             <input class="form-check-input" type="radio" id="course" name="type" value="1" <?php if(isset($courseTyper) && ($courseTyper === '1')) {echo 'checked="checked"';} else if ($course['course_type'] === '1') {echo 'checked="checked"';} ?>>
-                            <?php echo lang('course_1'); ?>
-                        </label>
-                        <label class="radio-inline">
+                            <label for="course"><?php echo lang('course_1'); ?></label>
+                        </div>
+                        <div class="checkbox radio-inline">
                             <input class="form-check-input" type="radio" id="event" name="type" value="2" <?php if(isset($courseTyper) && ($courseTyper === '2')) {echo 'checked="checked"';} else if ($course['course_type'] === '2') {echo 'checked="checked"';} ?>>
-                            <?php echo lang('event'); ?>
-                        </label>
+                            <label for="event"><?php echo lang('event'); ?></label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -179,15 +164,9 @@
     <!-- Datatable serverside -->
     <div class="table-container">  
         <h4><?php echo lang('employee_list'); ?></h4>
-        <div id="success-message">
-            <div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-label="close"><i class="fas fa-times"></i></button>
-                <strong id="message"></strong>
-            </div>
-        </div>
         <div class="add">
-            <button type="button" class="btn btn-success" style="color:#ffffff;" data-toggle="modal" data-target="#addEmployeeModal"><i class="fas fa-plus"></i> <?php echo lang('add'); ?></button>
-            <button type="button" class="btn btn-warning" style="color:#ffffff;" data-toggle="modal" data-target="#uploadEmployeeFileModal"><i class="fas fa-upload"></i> <?php echo lang('upload'); ?></button>
+            <button type="button" class="btn btn-primary" style="color:#ffffff;" data-toggle="modal" data-target="#addEmployeeModal"><i class="fas fa-plus"></i> <?php echo lang('add'); ?></button>
+            <button type="button" class="btn btn-success" style="color:#ffffff;" data-toggle="modal" data-target="#uploadEmployeeFileModal"><i class="fas fa-upload"></i> <?php echo lang('upload'); ?></button>
             <button type="button" id="export-employee-list-template" class="btn btn-info" style="color:#ffffff;"><i class="fas fa-file-export"></i> <?php echo lang('template'); ?></button>
         </div>
         <table id="employeeTable" class="table table-bordered display compact" width="100%">
@@ -225,7 +204,6 @@
                             <div class="row">
                                 <div class="col-md-2 col-sm-9">
                                     <div  class="form-group">
-                                        <label for="image"><?php echo lang('image_1'); ?>:</label>
                                         <div id="image">
                                             <img src="<?php echo base_url('images/user-2.png'); ?>" class="img-responsive" id="avatar-image">
                                         </div>
@@ -243,14 +221,14 @@
                                     <div class="form-group">
                                         <label><?php echo lang('gender_1'); ?>:</label>     
                                         <div class="">
-                                            <label class="radio-inline" for="male">
+                                            <div class="checkbox radio-inline">
                                                 <input class="form-check-input" type="radio" name="gender_" id="male_" value="1">
-                                                <?php echo lang('male'); ?>
-                                            </label>
-                                            <label class="radio-inline" for="female">
+                                                <label for="male_"><?php echo lang('male'); ?></label>
+                                            </div>
+                                            <div class="checkbox radio-inline">
                                                 <input class="form-check-input" type="radio" name="gender_" id="female_" value="2">
-                                                <?php echo lang('female'); ?>
-                                            </label>
+                                                <label for="female_"><?php echo lang('female'); ?></label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -282,8 +260,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="save-add" class="btn btn-success" style="color:#ffffff" onclick=""><i class="far fa-save"></i> <?php echo lang('save'); ?></button>
-                        <button type="button" id="cancle-add" class="btn btn-danger" style="color:#ffffff" data-dismiss="modal"><i class="fas fa-times"></i> <?php echo lang('cancle'); ?></button>
+                        <button type="button" id="save-add" class="btn btn-primary" style="color:#ffffff" onclick=""><i class="far fa-save"></i> <?php echo lang('save'); ?></button>
+                        <button type="button" id="cancle-add" class="btn btn-warning" style="color:#ffffff" data-dismiss="modal"><i class="fas fa-times"></i> <?php echo lang('cancle'); ?></button>
                     </div>
                 </form>
             </div>
@@ -318,26 +296,9 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" id="upload-file" class="btn btn-success" style="color:#ffffff;"><i class="fas fa-upload"></i> <?php echo lang('upload'); ?></button>
-                        <button type="button" id="cancle-upload" class="btn btn-danger" style="color:#ffffff;" data-dismiss="modal"><i class="fas fa-times"></i> <?php echo lang('cancle'); ?></button>
+                        <button type="button" id="cancle-upload" class="btn btn-warning" style="color:#ffffff;" data-dismiss="modal"><i class="fas fa-times"></i> <?php echo lang('cancle'); ?></button>
                     </div>
                 </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Delete user successfully -->
-    <div id="deleteSuccessModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <a class="close" href="<?php echo current_url(); ?>"><i class="fas fa-times"></i></a>
-                </div>
-                <div class="modal-body" style="text-align: center;">
-                    <h4 class="modal-title" id="delete-message"></h4>
-                </div>
-                <div class="modal-footer">
-                    <a class="btn btn-success" style="color:#ffffff" href="<?php echo current_url(); ?>"><i class="fas fa-check"></i> <?php echo lang('confirm') ?></a>
-                </div>
             </div>
         </div>
     </div>
@@ -354,7 +315,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" style="color:#ffffff" id="confirm-delete"><i class="fas fa-check"></i> <?php echo lang('yes'); ?></button>
-                    <button type="button" class="btn btn-danger" style="color:#ffffff" data-dismiss="modal"><i class="fas fa-times"></i> <?php echo lang('no'); ?></button>
+                    <button type="button" class="btn btn-warning" style="color:#ffffff" data-dismiss="modal"><i class="fas fa-times"></i> <?php echo lang('no'); ?></button>
                 </div>
             </div>
         </div>
@@ -362,7 +323,8 @@
 </div>
            
 <script>
-    $(function () {
+    $(function ()
+    {
         // Custom time input
         $('#timePicker').datetimepicker({
             useCurrent: false,
@@ -403,119 +365,6 @@
             }
         });
 
-        // Submit change Course information
-        $('#course-info').on('submit', function(evt) {
-            // evt.preventDefault();
-            // const formEl = $('<form/>', {
-            //     action: '<?php echo base_url('Courses/edit/') . $this->uri->segment('3'); ?>',
-            //     method: 'POST',
-            //     id: 'virtual-course-info-form',
-            // });
-            // formEl.append($('<input/>', {
-            //     type: 'hidden',
-            //     name: 'name',
-            //     value: $('#name').val(),
-            // }));
-            // formEl.append($('<input/>', {
-            //     type: 'hidden',
-            //     name: 'time',
-            //     value: $('#time').val(),
-            // }));
-            // if ($('#course').is(":checked")) {
-            //     formEl.append($('<input/>', {
-            //         type: 'hidden',
-            //         name: 'type',
-            //         value: $('#course').val(),
-            //     }));
-            // } else {
-            //     formEl.append($('<input/>', {
-            //         type: 'hidden',
-            //         name: 'type',
-            //         value: $('#event').val(),
-            //     }));
-            // }
-            // formEl.append($('<input/>', {
-            //     type: 'hidden',
-            //     name: 'startDate',
-            //     value: $('#startDate').val(),
-            // }));
-            // formEl.append($('<input/>', {
-            //     type: 'hidden',
-            //     name: 'endDate',
-            //     value: $('#endDate').val(),
-            // }));
-            // var weekDays = [];
-            // if ($('#mon').is(":checked")) {
-            //     weekDays.push($('#mon').val());
-            // }
-            // if ($('#tue').is(":checked")) {
-            //     weekDays.push($('#tue').val());
-            // }
-            // if ($('#wed').is(":checked")) {
-            //     weekDays.push($('#wed').val());
-            // }
-            // if ($('#thu').is(":checked")) {
-            //     weekDays.push($('#thu').val());
-            // }
-            // if ($('#fri').is(":checked")) {
-            //     weekDays.push($('#fri').val());
-            // }
-            // if ($('#sta').is(":checked")) {
-            //     weekDays.push($('#sta').val());
-            // }
-            // if ($('#sun').is(":checked")) {
-            //     weekDays.push($('#sun').val());
-            // }
-            // formEl.append($('<input/>', {
-            //     type: 'hidden',
-            //     name: 'weekDays[]',
-            //     value: weekDays,
-            // }));
-            // formEl.hide().appendTo('body').submit();
-            // formEl.detach();
-            
-            // var formData = new FormData();
-            // var weekDays = [];
-            // if ($('#mon').is(":checked")) {
-            //     weekDays.push($('#mon').val());
-            // }
-            // if ($('#tue').is(":checked")) {
-            //     weekDays.push($('#tue').val());
-            // }
-            // if ($('#wed').is(":checked")) {
-            //     weekDays.push($('#wed').val());
-            // }
-            // if ($('#thu').is(":checked")) {
-            //     weekDays.push($('#thu').val());
-            // }
-            // if ($('#fri').is(":checked")) {
-            //     weekDays.push($('#fri').val());
-            // }
-            // if ($('#sta').is(":checked")) {
-            //     weekDays.push($('#sta').val());
-            // }
-            // if ($('#sun').is(":checked")) {
-            //     weekDays.push($('#sun').val());
-            // }
-            // formData.append('name', $('#name').val());
-            // formData.append('time', $('#time').val());
-            // if ($('#course').is(":checked")) {
-            //     formData.append('type', $('#course').val());
-            // } else {
-            //     formData.append('type', $('#event').val());
-            // }
-            // formData.append('startDate', $('#startDate').val());
-            // formData.append('endDate', $('#endDate').val());
-            // formData.append('weekDays', weekDays);
-            // var request = new XMLHttpRequest()
-            // request.open("post", '<?php echo $this->uri->segment('3'); ?>', true);
-            // request.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-            // request.send(formData);
-        });
-        setTimeout(function () {
-            $('#virtual-course-info-form').remove();
-        }, 3000);
-        
         // Aotucomplete Employee ID when click Add button
         $('#employeeId_').flexdatalist({
             minLength: 0,
@@ -542,7 +391,8 @@
         });
 
         // Unset value and error when change Employee ID or close modal
-        function unsetEmployeeId() {
+        function unsetEmployeeId()
+        {
             $('.data-add-error').remove();
             $('#avatar-image').attr('src', '<?php echo base_url('images/user-2.png'); ?>');
             $('#employeeId_').val('')
@@ -605,11 +455,7 @@
                             });
                             
                         } else {
-                            $('#addEmployeeModal').modal('hide');
-                            employeeTable.ajax.reload();
-                            $('#message').html('<i class="fas fa-check"></i> ' + response.message);
-                            $('#success-message').css('display', 'block');
-                            unsetEmployeeId();
+                            location.reload();
                         }
                     }
                 });
@@ -672,11 +518,7 @@
                                 }
                             });
                         } else {
-                            $('#uploadEmployeeFileModal').modal('hide');
-                            employeeTable.ajax.reload();
-                            $('#message').html('<i class="fas fa-check"></i> ' + response.message);
-                            $('#success-message').css('display', 'block');
-                            unsetFileUpload();
+                            location.reload();
                         }
                     }
                 });
@@ -805,23 +647,18 @@
                     courseId: courseId,
                 },
                 success: function(response) {
-                    $('#deleteModal').modal('hide');
-                    $('#deleteSuccessModal').modal('show', response.message);
+                    location.reload();
                 },
             });
         });
-
-        // Show if delete user successfully
-        $('#deleteSuccessModal').on('show.bs.modal', function (e) {
-            $('#delete-message').html(e.relatedTarget);
-        })
     });
 
     // Initialize variable to validate
     const nameEle = document.getElementById('name');
 
     // Validate when user click "Save" button in Course information and have some error
-    function validateCourse() {
+    function validateCourse()
+    {
         let name = validateName();
         if (!name) {
             return false;

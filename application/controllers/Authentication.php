@@ -11,7 +11,7 @@
         public function index()
         {
             if (!$this->session->userdata('logged_in')) {
-                $this->load->view('login/login');
+                $this->load->view('login/index');
 
                 return;
             }
@@ -19,7 +19,7 @@
             if (!empty($redirect_url)) {
                 redirect ($redirect_url);
             } else {
-                redirect('/User_list/list', 'location');
+                redirect('/Dashboard', 'location');
             }
         }
 
@@ -42,15 +42,15 @@
             
             // Authenticate user. Redirect to User_list screen if authenticate successful
             $data = [
-                'loginId' => $this->input->post('loginId'),
+                'loginId' => trim($this->input->post('loginId')),
                 'password' => md5($this->input->post('password')),
             ];
             $user = $this->User_model->getUser($data);
             if (!$user) {
-                $data['loginFail'] = lang('login_fail');
-                $this->load->view('login/login', $data);
-
-                return;
+                $message = lang('login_fail');
+                $this->session->set_flashdata('loginIdr', $this->input->post('loginId'));
+                $this->session->set_flashdata('message', $message);
+                redirect('/Authentication', 'location');
             } else {
                 $profile = $this->Profile_model->getProfile(['id' => $user['profile_id'],]);
                 $this->User_model->updateLogin(['id' => $user['profile_id'],]);
@@ -68,17 +68,8 @@
                 if (!empty($redirect_url)) {
                     redirect ($redirect_url);
                 } else {
-                    redirect('/User_list/list', 'location');
+                    redirect('/Dashboard', 'location');
                 }
             }
-        }
-
-        /**
-         * Logout features
-         */
-        public function logout()
-        {
-            $this->session->sess_destroy();
-            redirect('/Authentication', 'location');
         }
     }

@@ -10,9 +10,18 @@
         border: #f1f1f1f1 2px solid;
         border-radius: 10px;
         padding-top: 30px;
+        padding-left: 50px;
         margin-top: 30px;
     }
-    .col-md-2 img {
+    #left-container {
+        margin-right: 50px;
+    }
+    #image-container #image,
+    #image-container #upload {
+        display: flex;
+        justify-content: center;
+    }
+    .col-md-3 img {
         border-radius: 50%;
         height: 200px;
         width: 200px; 
@@ -38,7 +47,7 @@
         form {
             margin: 0px 30px;
         }
-        .col-md-2 img {
+        .col-md-3 img {
             height: 250px;
             width: 250px; 
         }
@@ -52,7 +61,7 @@
         }
     }
     @media (max-width: 425px) {
-        .col-md-2 img {
+        .col-md-3 img {
             height: 150px;
             width: 150px; 
         }
@@ -66,21 +75,22 @@
     <div class="form-input">
         <form role="form" action="<?php echo $this->uri->segment('3'); ?>" method="post" enctype="multipart/form-data" onsubmit="return validate()">
             <div class="row">
-                <div class="col-md-10 col-md-offset-1">
+                <div class="col-md-11">
                     <h3><?php echo lang('user_info'); ?></h3>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-10 col-md-offset-1" style="text-align: right;">
+                <div class="col-md-11" style="text-align: right; margin-left: 50px;">
                     <div class="form-group">
                         <button type="button" class="btn btn-info" style="color:#ffffff;" onclick="window.history.back();"><i class="fa fa-arrow-left"></i> <?php echo lang('back'); ?></button>
                         <button type="submit" class="btn btn-primary" style="color:#ffffff;"><i class="far fa-save"></i> <?php echo lang('save'); ?></button>
+                        <a class="btn btn-warning" href="<?php echo base_url('User/logout'); ?>" style="color:#ffffff;"><i class="fas fa-sign-out-alt"></i> <?php echo lang('logout'); ?></a>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-2 col-md-offset-1" id="image-container">
-                    <div class="form-group">
+                <div class="col-md-3" id="left-container">
+                    <div class="form-group" id="image-container">
                         <div id="image">
                             <?php
                                 if (!empty($profile['image'])) {
@@ -114,16 +124,40 @@
                             ?>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="password"><?php echo lang('password'); ?><sup style="color: red;">*</sup>:</label>
+                        <input type="password" class="form-control" id="password" name="password" value="">
+                        <span>Error message</span>
+                        <?php
+                            if (isset($password) && !empty($password)) {
+                                echo '<div style="color:red">'.$password.'</div>';
+                            }
+                        ?>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword"><?php echo lang('new_password'); ?><sup style="color: red;">*</sup>:</label>
+                        <input type="password" class="form-control" id="newPassword" name="newPassword" value="" onblur="validateNewPassword()">
+                        <span>Error message</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword"><?php echo lang('confirm_password'); ?><sup style="color: red;">*</sup>:</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" value="" onblur="validateConfirmPassword()">
+                        <span>Error message</span>
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" name="profileId" value="<?php echo $profile['id']; ?>">
+                    </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="loginId"><?php echo lang('login_id_1'); ?><sup style="color: red;">*</sup>:</label>
-                        <input type="text" class="form-control" id="loginId" name="loginId" value="<?php echo $user['login_id']; ?>" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label for="password"><?php echo lang('password'); ?><sup style="color: red;">*</sup>:</label>
-                        <input type="password" class="form-control" id="password" name="password" value="" onblur="validatePassword()">
+                        <input type="text" class="form-control" id="loginId" name="loginId" value="<?php if (isset($loginIdr)) {echo $loginIdr;} else {echo $user['login_id'];} ?>" onblur="validateLoginId()">
                         <span>Error message</span>
+                        <?php
+                            if (isset($loginId) && !empty($loginId)) {
+                                echo '<div style="color:red">'.$loginId.'</div>';
+                            }
+                        ?>
                     </div>
                     <div class="form-group">
                         <label for="fullname"><?php echo lang('fullname_1'); ?><sup style="color: red;">*</sup>:</label>
@@ -134,60 +168,6 @@
                         <label for="birthday"><?php echo lang('birthday_1'); ?>:</label>          
                         <input type="date" class="form-control" id="birthday" name="birthday" style="cursor: pointer;" value="<?php if (isset($birthdayr)) {echo $birthdayr;} else {echo $profile['birthday'];} ?>">
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="employeeId"><?php echo lang('employee_id_1'); ?><sup style="color: red;">*</sup>:</label>
-                        <input type="text" class="form-control" id="employeeId" name="employeeId" value="<?php echo $profile['employee_id']; ?>" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label for="email"><?php echo lang('email_1'); ?><sup style="color: red;">*</sup>:</label>          
-                        <input type="email" class="form-control" id="email" name="email" value="<?php if (isset($emailr)) {echo $emailr;} else {echo $profile['email'];} ?>" onblur="validateEmail()">
-                        <span>Error message</span>
-                        <?php
-                            if (isset($email) && !empty($email)) {
-                                echo '<div style="color:red">'.$email.'</div>';
-                            }
-                        ?>
-                    </div>
-                    <div class="form-group">
-                        <label for="contractTypeId"><?php echo lang('contract_type'); ?><sup style="color: red;">*</sup>:</label>
-                        <select class="form-control" id="contractTypeId" name="contractTypeId" style="cursor: pointer;">
-                            <?php
-                                foreach ($contractTypes as $contractType) {
-                                    if (isset($contractTypeIdr) && ($contractTypeIdr === $contractType['id'])) {
-                                        echo '<option value="'.$contractType['id'].'" selected>'.$contractType['name'].'</option>';
-                                    } else if ($user['contract_type_id'] === $contractType['id']) {
-                                        echo '<option value="'.$contractType['id'].'" selected>'.$contractType['name'].'</option>';
-                                    } else {
-                                        echo '<option value="'.$contractType['id'].'">'.$contractType['name'].'</option>';
-                                    }
-                                }
-                            ?>
-                        </select>
-                        <span>Error message</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="positionId"><?php echo lang('position'); ?><sup style="color: red;">*</sup>:</label>
-                        <select class="form-control" id="positionId" name="positionId" style="cursor: pointer;">
-                            <?php
-                                foreach ($positions as $position) {
-                                    if (isset($positionIdr) && ($positionIdr === $position['id'])) {
-                                        echo '<option value="'.$position['id'].'" selected>'.$position['name'].'</option>';
-                                    } else if ($profile['position_id'] === $position['id']) {
-                                        echo '<option value="'.$position['id'].'" selected>'.$position['name'].'</option>';
-                                    } else {
-                                        echo '<option value="'.$position['id'].'">'.$position['name'].'</option>';
-                                    }
-                                }
-                            ?>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-2 col-md-offset-1"></div>
-                <div class="col-md-2">
                     <div class="form-group">   
                         <label><?php echo lang('gender_1'); ?>:</label>     
                         <div class="">
@@ -201,44 +181,16 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group">   
-                        <label><?php echo lang('status_1'); ?>:</label>  
-                        <div class="">
-                            <div class="checkbox radio-inline">
-                                <input class="form-check-input" type="radio" name="status" id="available" value="1" <?php if(($profile['status'] === '1') | (isset($statusr) && ($statusr === '1'))) echo 'checked="checked"'; ?>>
-                                <label for="available"><?php echo lang('available'); ?></label>
-                            </div>
-                            <div class="checkbox radio-inline">
-                                <input class="form-check-input" type="radio" name="status" id="unavailable" value="2" <?php if(($profile['status'] === '2') | (isset($statusr) && ($statusr === '2'))) echo 'checked="checked"'; ?>>
-                                <label for="unavailable"><?php echo lang('unavailable'); ?></label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
                     <div class="form-group">
-                        <label for="departmentId"><?php echo lang('department'); ?><sup style="color: red;">*</sup>:</label>
-                        <select class="form-control" id="departmentId" name="departmentId" style="cursor: pointer;">
-                            <?php
-                                foreach ($departments as $department) {
-                                    if (isset($departmentIdr) && ($departmentIdr === $department['id'])) {
-                                        echo '<option value="'.$department['id'].'" selected>'.$department['name'].'</option>';
-                                    } else  if ($profile['department_id'] === $department['id']) {
-                                        echo '<option value="'.$department['id'].'" selected>'.$department['name'].'</option>';
-                                    } else {
-                                        echo '<option value="'.$department['id'].'">'.$department['name'].'</option>';
-                                    }
-                                }
-                            ?>
-                        </select>
+                        <label for="email"><?php echo lang('email_1'); ?><sup style="color: red;">*</sup>:</label>          
+                        <input type="email" class="form-control" id="email" name="email" value="<?php if (isset($emailr)) {echo $emailr;} else {echo $profile['email'];} ?>" onblur="validateEmail()">
+                        <span>Error message</span>
+                        <?php
+                            if (isset($email) && !empty($email)) {
+                                echo '<div style="color:red">'.$email.'</div>';
+                            }
+                        ?>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-2 col-md-offset-1"></div>
-                <div class="col-md-4">
                     <div class="form-group">
                         <label for="mobile"><?php echo lang('mobile_1'); ?>:</label>          
                         <input type="text" class="form-control" id="mobile" name="mobile" value="<?php if (isset($mobiler)) {echo $mobiler;} else {echo $profile['mobile'];} ?>" onblur="validateMobile()">
@@ -252,6 +204,60 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
+                        <label for="employeeId"><?php echo lang('employee_id_1'); ?><sup style="color: red;">*</sup>:</label>
+                        <input type="text" class="form-control" id="employeeId" name="employeeId" value="<?php echo $profile['employee_id']; ?>" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="contractTypeId"><?php echo lang('contract_type'); ?><sup style="color: red;">*</sup>:</label>
+                        <select class="form-control" id="contractTypeId" name="contractTypeId" disabled>
+                            <?php
+                                foreach ($contractTypes as $contractType) {
+                                    if ($user['contract_type_id'] === $contractType['id']) {
+                                        echo '<option value="'.$contractType['id'].'" selected>'.$contractType['name'].'</option>';
+                                    }
+                                }
+                            ?>
+                        </select>
+                        <span>Error message</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="positionId"><?php echo lang('position'); ?><sup style="color: red;">*</sup>:</label>
+                        <select class="form-control" id="positionId" name="positionId" disabled>
+                            <?php
+                                foreach ($positions as $position) {
+                                    if ($profile['position_id'] === $position['id']) {
+                                        echo '<option value="'.$position['id'].'" selected>'.$position['name'].'</option>';
+                                    }
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">   
+                        <label><?php echo lang('status_1'); ?>:</label>  
+                        <div class="">
+                            <div class="checkbox radio-inline">
+                                <input class="form-check-input" type="radio" name="status" id="available" value="1" <?php if($profile['status'] === '1') echo 'checked="checked"'; ?> disabled>
+                                <label for="available"><?php echo lang('available'); ?></label>
+                            </div>
+                            <div class="checkbox radio-inline">
+                                <input class="form-check-input" type="radio" name="status" id="unavailable" value="2" <?php if($profile['status'] === '2') echo 'checked="checked"'; ?> disabled>
+                                <label for="unavailable"><?php echo lang('unavailable'); ?></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="departmentId"><?php echo lang('department'); ?><sup style="color: red;">*</sup>:</label>
+                        <select class="form-control" id="departmentId" name="departmentId" disabled>
+                            <?php
+                                foreach ($departments as $department) {
+                                    if ($profile['department_id'] === $department['id']) {
+                                        echo '<option value="'.$department['id'].'" selected>'.$department['name'].'</option>';
+                                    }
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="probation-date"><?php echo lang('probation_date'); ?>:</label>          
                         <input type="date" class="form-control" id="probation-date" name="probationDate" style="cursor: pointer;" value="<?php echo $profile['probation_date'] ?>" disabled>
                     </div>
@@ -262,8 +268,8 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-2 col-md-offset-1"></div>
-                <div class="col-md-8">
+                <div class="col-md-3"></div>
+                <div class="col-md-8" style="margin-left: 50px;">
                     <div class="form-group">
                         <label for="address"><?php echo lang('address_1'); ?>:</label>          
                         <textarea class="form-control" id="address" name="address" rows="3" onblur="validateAddress()"><?php if (isset($addressr)) {echo $addressr;} else {echo $profile['address'];} ?></textarea>
@@ -294,26 +300,67 @@
     });
 
     // Initialize variable to validate
+    const loginIdEle = document.getElementById('loginId');
     const passwordEle = document.getElementById('password');
-    const emailEle = document.getElementById('email');
+    const newPasswordEle = document.getElementById('newPassword');
+    const confirmPasswordEle = document.getElementById('confirmPassword');
     const fullnameEle = document.getElementById('fullname');
+    const emailEle = document.getElementById('email');
     const addressEle = document.getElementById('address');
     const telephoneEle = document.getElementById('telephone');
     const mobileEle = document.getElementById('mobile');
 
     // Validate when user click "Save" button and have some error
-    function validate()
-    {
-        let password = validatePassword();
-        let email = validateEmail();
+    function validate() {
+        let loginId = validateLoginId();
+        // let password = validatePassword();
+        let newPassword = validateNewPassword();
+        let confirmPassword = validateConfirmPassword();
         let fullname = validateFullname();
+        let email = validateEmail();
         let address = validateAddress();
         let telephone = validateTelephone();
         let mobile = validateMobile();
-        if (!password || !email || !fullname || !address || !telephone || !mobile) {
-            return false;
-        }
+        if (!loginId ||
+            !newPassword ||
+            !confirmPassword ||
+            !fullname ||
+            !email ||
+            !address ||
+            !telephone ||
+            !mobile) {
+                return false;
+            }
         return true;
+    };
+
+    // Validate Login ID
+    function validateLoginId()
+    {
+        let parentEle = loginIdEle.parentNode;
+        parentEle.classList.remove('success', 'error');
+        return checkLoginId();
+    }
+
+    function checkLoginId()
+    {
+        let loginIdValue = loginIdEle.value;
+        let isCheck = true;
+
+        if (loginIdValue === '') {
+            setError(loginIdEle, '<?php echo lang('LOGINID001'); ?>');
+            isCheck = false;
+        } else if (loginIdValue.length < 6) {
+            setError(loginIdEle, '<?php echo lang('LOGINID002'); ?>');
+            isCheck = false;
+        } else if (loginIdValue.length > 30) {
+            setError(loginIdEle, '<?php echo lang('LOGINID003'); ?>');
+            isCheck = false;
+        } else {
+            setSuccess(loginIdEle);
+        }
+
+        return isCheck;
     }
 
     // Validate Password
@@ -327,26 +374,76 @@
     {
         let passwordValue = passwordEle.value;
         let isCheck = true;
+
+        if (passwordValue === '') {
+            setError(passwordEle, '<?php echo lang('PASSWORD001'); ?>');
+            isCheck = false;
+        } else {
+            setSuccess(passwordEle);
+        }
+
+        return isCheck;
+    }
+
+    // Validate New Password
+    function validateNewPassword() {
+        let parentEle = newPasswordEle.parentNode;
+        parentEle.classList.remove('success', 'error');
+        return checkNewPassword();
+    }
+
+    function checkNewPassword()
+    {
+        let newPasswordValue = newPasswordEle.value;
+        let passwordValue = passwordEle.value;
+        let isCheck = true;
+
         if (passwordValue != '') {
-            if (passwordValue.length < 8) {
-                setError(passwordEle, '<?php echo lang('PASSWORD002'); ?>');
+            if (newPasswordValue === '') {
+                setError(newPasswordEle, '<?php echo lang('PASSWORD006'); ?>');
                 isCheck = false;
-            } else if (passwordValue.length > 255) {
-                setError(passwordEle, '<?php echo lang('PASSWORD003'); ?>');
+            } else if (newPasswordValue.length < 8) {
+                setError(newPasswordEle, '<?php echo lang('PASSWORD002'); ?>');
                 isCheck = false;
-            } else if (!isPassword(passwordValue)) {
-                setError(passwordEle, '<?php echo lang('PASSWORD004'); ?>');
+            } else if (newPasswordValue.length > 255) {
+                setError(newPasswordEle, '<?php echo lang('PASSWORD003'); ?>');
+                isCheck = false;
+            } else if (!isPassword(newPasswordValue)) {
+                setError(newPasswordEle, '<?php echo lang('PASSWORD004'); ?>');
                 isCheck = false;
             } else {
-                setSuccess(passwordEle);
+                setSuccess(newPasswordEle);
             }
         }
-        
+
         return isCheck;
     }
 
     function isPassword(password) {
         return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s)/.test(password);
+    }
+
+    // Check Confirm Password
+    function validateConfirmPassword() {
+        let parentEle = confirmPasswordEle.parentNode;
+        parentEle.classList.remove('success', 'error');
+        return checkConfirmPassword();
+    }
+
+    function checkConfirmPassword()
+    {
+        let confirmPasswordValue = confirmPasswordEle.value;
+        let newPasswordValue = newPasswordEle.value;
+        let isCheck = true;
+
+        if (confirmPasswordValue != newPasswordValue) {
+            setError(confirmPasswordEle, '<?php echo lang('PASSWORD005'); ?>');
+            isCheck = false;
+        } else {
+            setSuccess(confirmPasswordEle);
+        }
+
+        return isCheck;
     }
 
     // Validate Fullname
@@ -490,7 +587,6 @@
         return /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/.test(number);
     }
 
-    // Set status (success or error)
     function setSuccess(ele)
     {
         ele.parentNode.classList.add('success');

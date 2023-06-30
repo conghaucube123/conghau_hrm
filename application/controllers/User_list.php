@@ -1,5 +1,5 @@
 <?php
-    date_default_timezone_set('Asia/Bangkok');
+    date_default_timezone_set('Asia/Ho_Chi_Minh');
     require_once 'vendor/autoload.php';
     class User_list extends MY_Controller
     {
@@ -16,10 +16,10 @@
         /**
          * User list screen
          */
-        public function list($message = [])
+        public function index($message = [])
         {
-            // Set data to load User list view
-            $content = $this->load->view('user_list/user_list', $message ,true);
+            // Set data to view User list screen
+            $content = $this->load->view('user_list/index', $message ,true);
             
             // View User list screen
             $this->load->view('master_page', ['content' => $content]);
@@ -73,8 +73,8 @@
                     $temp['status'] = 'Unavailable';
                 }
                 $temp['id'] = $profile['profile_id'];
-                $temp['recentLogin'] = $profile['recent_login'];
-                $temp['createdTime'] = $profile['created_time'];
+                $temp['recentLogin'] = substr($profile['recent_login'], 0, 19);
+                $temp['createdTime'] = substr($profile['created_time'], 0, 19);
                 $temp['createdUser'] = $profile['created_user'];
                 $temp['mobile'] = $profile['mobile'];
                 $temp['birthday'] = $profile['birthday'];
@@ -117,21 +117,28 @@
                 $filePath = 'views/user_list/user_list_template_en.xlsx';
             }
             $spreadsheet = $reader->load(APPPATH . $filePath);
-            $profiles = $this->Profile_model->getProfile();
+            $dataSearch = [
+                'employeeId' => trim($this->input->post('employeeId')),
+                'name' => trim($this->input->post('name')),
+                'email' => trim($this->input->post('email')),
+                'available' => $this->input->post('available'),
+                'unavailable' => $this->input->post('unavailable'),
+            ];
+            $profiles = $this->Profile_model->getProfilesSearch($dataSearch);
             $data = [];
             foreach ($profiles as $profile) {
                 $temp = [];
                 $temp['employee_id'] = $profile['employee_id'];
                 $temp['fullname'] = $profile['name'];
+                $temp['email'] = $profile['email'];
                 $temp['birthday'] = $profile['birthday'];
                 if ($profile['gender'] === '1') {
                     $temp['gender'] = 'Male';
                 } else {
                     $temp['gender'] = 'Female';
                 }
-                $temp['address'] = $profile['address'];
-                $temp['email'] = $profile['email'];
                 $temp['mobile'] = $profile['mobile'];
+                $temp['address'] = $profile['address'];
                 $data[] = $temp;
             }
             // var_dump($data);
@@ -234,9 +241,10 @@
         /**
          * Edit screen
          * 
-         * @param array error of data if any
+         * @param array message if any
+         * @param string id of profile
          */
-        private function showEditView($id = '', $error = [])
+        private function showEditView($id = '', $message = [])
         {
             // Set data to view Edit screen
             $data['positions'] = $this->Position_model->getPosition();
@@ -244,7 +252,7 @@
             $data['contractTypes'] = $this->Contract_type_model->getContractType();
             $data['profile'] = $this->Profile_model->getProfile(['id' => $id,]);
             $data['user'] = $this->User_model->getUser(['profileId' => $id,]);
-            $data = array_merge($data, $error);
+            $data = array_merge($data, $message);
             $content = $this->load->view('user_list/edit', $data ,true);
             
             // View Edit screen
@@ -252,7 +260,9 @@
         }
 
         /**
-         * Edit features
+         * Edit action
+         * 
+         * @param string id of profile
          */
         public function edit($id = '')
         {
@@ -279,9 +289,9 @@
                 'id' => $id,
                 'name' => trim($this->input->post('fullname')),
                 'email' => trim($this->input->post('email')),
-                'birthday' => $this->input->post('birthday'),
-                'position_id' => $this->input->post('positionId'),
-                'department_id' => $this->input->post('departmentId'),
+                'birthday' => date($this->input->post('birthday')),
+                'positionId' => $this->input->post('positionId'),
+                'departmentId' => $this->input->post('departmentId'),
                 'address' => trim($this->input->post('address')),
                 'telephone' => trim($this->input->post('telephone')),
                 'mobile' => trim($this->input->post('mobile')),
@@ -293,7 +303,7 @@
             $dataUser = [
                 'id' => $id,
                 'password' => md5(trim($this->input->post('password'))),
-                'contract_type_id' => $this->input->post('contractTypeId'),
+                'contractTypeId' => $this->input->post('contractTypeId'),
                 'updateUser' => $this->session->userdata('loginId'),
             ];
 
@@ -317,7 +327,6 @@
             if (!$imageError['flag']) {
                 move_uploaded_file($_FILES['avatar']['tmp_name'], $target_file);
             } else {
-                $error['im'] = $_FILES['avatar'];
                 $error = array_merge($error, $imageError);
                 $this->showEditView($id, $error);
 
@@ -339,39 +348,46 @@
                 return;
             }
             
+            $loginId = $this->User_model->getUser(['profileId' => $id,])['login_id'];
             // Update data
             try {
                 $this->db->trans_start();
                 $this->User_model->updateUser($dataUser);
                 $this->Profile_model->updateProfile($dataProfile);
                 $this->db->trans_complete();
-                $loginId = $this->User_model->getUser(['profileId' => $id,])['login_id'];
-                $data['message'] = lang('update_user') .' '. $loginId .' '. lang('success');
-                $this->showEditView($id, $data);
+                $message = lang('update_user') .' '. $loginId .' '. lang('success');
+                $this->session->set_flashdata('message', $message);
+                redirect('/User_list/edit/'.$id, 'location');
             } catch (Exception $e) {
                 echo $e;
                 $this->db->trans_rollback();
+                $message = lang('update_user') .' '. $loginId .' '. lang('fail') . ' ' . lang('wrong');
+                $this->session->set_flashdata('message', $message);
+                redirect('/User_list/edit/'.$id, 'location');
             }
         }
 
         /**
          * Add screen
          * 
-         * @param array error of data if any
+         * @param array message if any
          */
-        private function showAddView($error = [])
+        private function showAddView($message = [])
         {
             // Set data to view Add screen
             $data['positions'] = $this->Position_model->getPosition();
             $data['departments'] = $this->Department_model->getDepartment();
             $data['contractTypes'] = $this->Contract_type_model->getContractType();
-            $data = array_merge($data, $error);
+            $data = array_merge($data, $message);
             $content = $this->load->view('user_list/add', $data ,true);
             
             // View Add screen
             $this->load->view('master_page', ['content' => $content]);
         }
 
+        /**
+         * Add action
+         */
         public function add()
         {
             $error = [];
@@ -397,14 +413,14 @@
                 'employee_id' => trim($this->input->post('employeeId')),
                 'name' => trim($this->input->post('fullname')),
                 'email' => trim($this->input->post('email')),
-                'birthday' => $this->input->post('birthday'),
+                'birthday' => date($this->input->post('birthday')),
                 'position_id' => $this->input->post('positionId'),
                 'department_id' => $this->input->post('departmentId'),
                 'address' => trim($this->input->post('address')),
                 'telephone' => trim($this->input->post('telephone')),
                 'mobile' => trim($this->input->post('mobile')),
-                'official_date' => $this->input->post('officialDate'),
-                'probation_date' => $this->input->post('probationDate'),
+                'official_date' => date($this->input->post('officialDate')),
+                'probation_date' => date($this->input->post('probationDate')),
                 'status' => $this->input->post('status'),
                 'gender' => $this->input->post('gender'),
                 'image' => $file_name,
@@ -475,38 +491,48 @@
                 $dataUser = array_merge($dataUser, $profileId);
                 $this->User_model->addUser($dataUser);
                 $this->db->trans_complete();
-                $data['message'] = lang('add_user_success').' '. $profile['employee_id'];
-                $this->showAddView($data);
+                $message = lang('add_user_success').' '. $profile['employee_id'];
+                $this->session->set_flashdata('message', $message);
+                redirect('/User_list/add', 'location');
             } catch (Exception $e) {
                 echo $e;
                 $this->db->trans_rollback();
+                $message = lang('add_user_fail') .' '. lang('fail') . ' ' . lang('wrong');
+                $this->session->set_flashdata('message', $message);
+                redirect('/User_list/add', 'location');
             }
         }
 
         /**
          * Delete User
          */
-        public function delete()
+        public function deleteUser()
         {
+            // Set data to delete
+            $loginId = trim($this->input->post('login_id'));
+            $dataDelete = [
+                'id' => trim($this->input->post('id')),
+                'updateUser' => $this->session->userdata('loginId'),
+            ];
             // Delete User
             try {
-                $loginId = trim($this->input->post('login_id'));
-                $dataDelete = [
-                    'id' => trim($this->input->post('id')),
-                    'updateUser' => $this->session->userdata('loginId'),
-                ];
                 $this->db->trans_start();
                 $this->Profile_model->deleteProfile($dataDelete);
                 $this->User_model->deleteUser($dataDelete);
                 $this->db->trans_complete();
+                $message = lang('delete_user') .' '. $loginId .' '. lang('success');
+                $this->session->set_flashdata('message', $message);
                 header('Content-Type', 'application/json');
                 echo json_encode([
                     'success' => true,
-                    'message'=> lang('delete_user') .' '. $loginId .' '. lang('success'),
+                    'message'=> $message,
                 ]);
             } catch (Exception $e) {
                 echo $e;
                 $this->db->trans_rollback();
+                $message = lang('delete_user') .' '. $loginId .' '. lang('fail') . ' ' . lang('wrong');
+                $this->session->set_flashdata('message', $message);
+                redirect(current_url(), 'location');
             }
         }
     }

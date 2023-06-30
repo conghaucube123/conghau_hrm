@@ -22,11 +22,13 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
         <script src="<?php echo base_url(); ?>public/jquery-flexdatalist-2.3.0/jquery.flexdatalist.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
         
         <script src="https://cdn.datatables.net/plug-ins/1.13.4/i18n/vi.json"></script>
         <script src="https://cdn.datatables.net/plug-ins/1.13.4/i18n/en-GB.json"></script>
         <style>
+            /* Shared */
             :root {
                 --font-family-sans-serif: "Open Sans", -apple-system, BlinkMacSystemFont,
                 "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
@@ -73,29 +75,36 @@
                 display: flex;
                 min-height: 100vh;
             }
-            .dashboard-app {
+            .menu-toggle {
+                position: relative;
+                float: left;
+                margin: 0;
+                width: 10%;
+                width: 42px;
+                height: 42px;
                 display: -webkit-box;
                 display: -webkit-flex;
                 display: -ms-flexbox;
                 display: flex;
-                -webkit-box-orient: vertical;
-                -webkit-box-direction: normal;
-                -webkit-flex-direction: column;
-                -ms-flex-direction: column;
-                flex-direction: column;
-                -webkit-box-flex: 2;
-                -webkit-flex-grow: 2;
-                -ms-flex-positive: 2;
-                flex-grow: 2;
-                margin-top: 84px;
+                -webkit-box-align: center;
+                -webkit-align-items: center;
+                -ms-flex-align: center;
+                align-items: center;
+                -webkit-box-pack: center;
+                -webkit-justify-content: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+                cursor: pointer;
+                color: #0e1c36;
             }
-            .dashboard-content {
-                -webkit-box-flex: 2;
-                -webkit-flex-grow: 2;
-                -ms-flex-positive: 2;
-                flex-grow: 2;
-                padding: 25px;
+            .menu-toggle:hover, .menu-toggle:active, .menu-toggle:focus {
+                text-decoration: none;
+                color: #6c757d;
             }
+            .menu-toggle i {
+                font-size: 20px;
+            }
+            /* Sidebar */
             .dashboard-nav {
                 min-width: 238px;
                 position: fixed;
@@ -167,6 +176,12 @@
                 font-size: 27px;
                 margin-right: 10px;
             }
+            .nav-item-divider {
+                height: 1px;
+                margin: 1rem 0;
+                overflow: hidden;
+                background-color: rgba(236, 238, 239, 0.3);
+            }
             .dashboard-nav-list {
                 display: -webkit-box;
                 display: -webkit-flex;
@@ -203,37 +218,22 @@
             .active {
                 background: rgba(0, 0, 0, 0.5);
             }
-            .nav {
-                display: inline;
-            }
-            .menu-toggle {
-                position: relative;
-                float: left;
-                margin: 0;
-                width: 10%;
-                width: 42px;
-                height: 42px;
+            /* Header */
+            .dashboard-app {
                 display: -webkit-box;
                 display: -webkit-flex;
                 display: -ms-flexbox;
                 display: flex;
-                -webkit-box-align: center;
-                -webkit-align-items: center;
-                -ms-flex-align: center;
-                align-items: center;
-                -webkit-box-pack: center;
-                -webkit-justify-content: center;
-                -ms-flex-pack: center;
-                justify-content: center;
-                cursor: pointer;
-                color: #0e1c36;
-            }
-            .menu-toggle:hover, .menu-toggle:active, .menu-toggle:focus {
-                text-decoration: none;
-                color: #6c757d;
-            }
-            .menu-toggle i {
-                font-size: 20px;
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -webkit-flex-direction: column;
+                -ms-flex-direction: column;
+                flex-direction: column;
+                -webkit-box-flex: 2;
+                -webkit-flex-grow: 2;
+                -ms-flex-positive: 2;
+                flex-grow: 2;
+                margin-top: 84px;
             }
             .dashboard-toolbar {
                 min-height: 50px;
@@ -253,6 +253,9 @@
                 margin-bottom: 10px;
                 width: 100%;
                 position: relative;
+            }
+            .nav {
+                display: inline;
             }
             .dashboard-toolbar .navbar-right{
                 margin: 0;
@@ -280,20 +283,15 @@
                 width: 20px;
                 overflow: hidden;
             }
-            .nav-item-divider {
-                height: 1px;
-                margin: 1rem 0;
-                overflow: hidden;
-                background-color: rgba(236, 238, 239, 0.3);
+            /* Body */
+            .dashboard-content {
+                -webkit-box-flex: 2;
+                -webkit-flex-grow: 2;
+                -ms-flex-positive: 2;
+                flex-grow: 2;
+                padding: 25px;
             }
-            .footer-container {
-                text-align: center;
-                margin-top: 50px;
-                margin-bottom: 50px;
-                position: sticky;
-                bottom: 0;
-                width: 100%;
-            }
+            /* Processing bar */
             #userTable_processing,
             #courseTable_processing,
             #employeeTable_processing {
@@ -345,8 +343,76 @@
             .title {
                 background-image: linear-gradient(0, #c1e3d6, #d7ebe1, #d7ebe1, #d7ebe1);
             }
+            /* Input customize */
             label {
                 cursor: pointer;
+            }
+            .checkbox {
+                padding-left: 20px;
+                margin-top: 0px;
+            }
+            .checkbox label {
+                display: inline-block;
+                vertical-align: middle;
+                position: relative;
+                padding-left: 5px;
+            }
+            .checkbox input[type="checkbox"],
+            .checkbox input[type="radio"] {
+                accent-color: #337ab7; 
+                width: 17px;
+                height: 17px;
+                margin-left: -20px;
+                cursor: pointer;
+            }
+            .checkbox input[type="checkbox"]:disabled + label {
+                cursor: not-allowed;
+            }
+            /* Snackbar */
+            #snackbar {
+                display: none;
+                min-width: 250px;
+                margin-left: -125px;
+                background-color: #333;
+                color: #fff;
+                text-align: center;
+                border-radius: 2px;
+                padding: 16px;
+                position: fixed;
+                z-index: 1;
+                left: 50%;
+                bottom: 30px;
+            }
+            #snackbar.show {
+                display: block;
+                -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+                animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            }
+            /* Animations to fade the snackbar in and out */
+            @-webkit-keyframes fadein {
+                from {bottom: 0; opacity: 0;}
+                to {bottom: 30px; opacity: 1;}
+            }
+            @keyframes fadein {
+                from {bottom: 0; opacity: 0;}
+                to {bottom: 30px; opacity: 1;}
+            }
+            @-webkit-keyframes fadeout {
+                from {bottom: 30px; opacity: 1;}
+                to {bottom: 0; opacity: 0;}
+            }
+            @keyframes fadeout {
+                from {bottom: 30px; opacity: 1;}
+                to {bottom: 0; opacity: 0;}
+            }
+            /* Footer */
+            .footer-container {
+                text-align: center;
+                margin-top: 50px;
+                margin-bottom: 50px;
+                position: sticky;
+                bottom: 0;
+                width: 100%;
             }
             @media (min-width: 992px) {
                 .dashboard-app {
@@ -401,21 +467,21 @@
             <div class="dashboard-nav">
                 <header>
                     <div class="menu-toggle" style="color: #dfdfdf;"><i class="fas fa-bars"></i></div>
-                    <a href="#" class="brand-logo">
+                    <a href="<?php echo base_url('Dashboard'); ?>" class="brand-logo">
                         <img src="<?php echo base_url('images/icon-8.png'); ?>" alt="">
                     </a>
                 </header>
                 <div class="nav-item-divider"></div>
                 <nav class="dashboard-nav-list">
-                    <a href="#" class="dashboard-nav-item <?php if ($this->uri->segment('1') === 'Home') echo 'active';?>">
-                        <i class="fas fa-home"></i>
-                        <?php echo lang('home'); ?>
+                    <a href="<?php echo base_url('Dashboard'); ?>" class="dashboard-nav-item <?php if ($this->uri->segment('1') === 'Dashboard') echo 'active';?>">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <?php echo lang('dashboard'); ?>
                     </a>
-                    <a href="<?php echo base_url('User_list/list'); ?>" class="dashboard-nav-item <?php if ($this->uri->segment('1') === 'User_list') echo 'active';?>">
+                    <a href="<?php echo base_url('User_list'); ?>" class="dashboard-nav-item <?php if ($this->uri->segment('1') === 'User_list') echo 'active';?>">
                         <i class="fas fa-list"></i>
                         <?php echo lang('user_list'); ?>
                     </a>
-                    <a href="<?php echo base_url('Courses/courses'); ?>" class="dashboard-nav-item <?php if ($this->uri->segment('1') === 'Courses') echo 'active';?>">
+                    <a href="<?php echo base_url('Courses'); ?>" class="dashboard-nav-item <?php if ($this->uri->segment('1') === 'Courses') echo 'active';?>">
                         <i class="fas fa-graduation-cap"></i>
                         <?php echo lang('courses'); ?>
                     </a>
@@ -454,8 +520,8 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a href="<?php echo base_url('User_list/edit/'. $this->session->userdata('id')); ?>"><?php echo lang('account'); ?></a></li>
-                                        <li><a href="<?php echo base_url('Authentication/logout'); ?>"><?php echo lang('logout'); ?></a></li>
+                                        <li><a href="<?php echo base_url('User/profile/'. $this->session->userdata('loginId')); ?>"><?php echo lang('account'); ?></a></li>
+                                        <li><a href="<?php echo base_url('User/logout'); ?>"><?php echo lang('logout'); ?></a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -466,6 +532,7 @@
                 <div class='dashboard-content'>
                     <?php echo $content; ?>
                 </div>
+                <div id="snackbar"></div>
                 <footer>
                     <div class="footer-container">
                         <span>Copyright © 2023 Pham Cong Hau.</span>
@@ -476,7 +543,22 @@
     </body>
     <script>
         const mobileScreen = window.matchMedia("(max-width: 990px )");
-        $(document).ready(function () {
+        $(function () {
+            function snackbarShow(message) {
+                var snackbar = document.getElementById("snackbar");
+                snackbar.innerHTML = message;
+                snackbar.className = "show";
+                setTimeout(function() { snackbar.className = snackbar.className.replace("show", ""); }, 3000);
+            }
+            <?php
+                if ($this->session->flashdata('message')) { 
+            ?>
+                    console.log('<?php echo $this->session->flashdata('message') ?>');
+                    snackbarShow('<?php echo $this->session->flashdata('message') ?>');
+            <?php
+                    $this->session->set_flashdata('message', "");
+                }
+            ?>
             $(".menu-toggle").click(function () {
                 if (mobileScreen.matches) {
                     $(".dashboard-nav").toggleClass("mobile-show");

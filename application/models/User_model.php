@@ -25,7 +25,19 @@
             if (!empty($data['password'])) {
                 $this->db->set('password', $data['password']);
             }
-            $this->db->set('contract_type_id', $data['contract_type_id']);
+            $this->db->set('contract_type_id', $data['contractTypeId']);
+            $this->db->set('updated_user', $data['updateUser']);
+            $this->db->set('updated_time', 'now');
+            $this->db->where('profile_id', $data['id']);
+            $this->db->update('users');
+        }
+
+        public function updateUserProfile($data = [])
+        {
+            if (!empty($data['password'])) {
+                $this->db->set('password', $data['password']);
+            }
+            $this->db->set('login_id', $data['loginId']);
             $this->db->set('updated_user', $data['updateUser']);
             $this->db->set('updated_time', 'now');
             $this->db->where('profile_id', $data['id']);

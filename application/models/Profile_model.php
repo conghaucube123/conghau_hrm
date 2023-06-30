@@ -59,12 +59,29 @@
             $this->db->set('name', $data['name']);
             $this->db->set('email', $data['email']);
             $this->db->set('birthday', $data['birthday']);
-            $this->db->set('position_id', $data['position_id']);
-            $this->db->set('department_id', $data['department_id']);
+            $this->db->set('position_id', $data['positionId']);
+            $this->db->set('department_id', $data['departmentId']);
             $this->db->set('address', $data['address']);
             $this->db->set('telephone', $data['telephone']);
             $this->db->set('mobile', $data['mobile']);
             $this->db->set('status', $data['status']);
+            $this->db->set('gender', $data['gender']);
+            if (!empty($data['image'])) {
+                $this->db->set('image', $data['image']);
+            }
+            $this->db->set('updated_user', $data['updateUser']);
+            $this->db->set('updated_time', 'now');
+            $this->db->where('id', $data['id']);
+            $this->db->update('profiles');
+        }
+        public function updateUserProfile($data = [])
+        {
+            $this->db->set('name', $data['name']);
+            $this->db->set('email', $data['email']);
+            $this->db->set('birthday', $data['birthday']);
+            $this->db->set('address', $data['address']);
+            $this->db->set('telephone', $data['telephone']);
+            $this->db->set('mobile', $data['mobile']);
             $this->db->set('gender', $data['gender']);
             if (!empty($data['image'])) {
                 $this->db->set('image', $data['image']);

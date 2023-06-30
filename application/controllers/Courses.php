@@ -1,5 +1,5 @@
 <?php
-    date_default_timezone_set('Asia/Bangkok');
+    date_default_timezone_set('Asia/Ho_Chi_Minh');
     require_once 'vendor/autoload.php';
     class Courses extends MY_Controller
     {
@@ -14,12 +14,12 @@
         /**
          * Courses screen
          */
-        public function courses($message = [])
+        public function index($message = [])
         {
-            // Set data to load User list view
-            $content = $this->load->view('courses/courses', $message ,true);
+            // Set data to view Courses screen
+            $content = $this->load->view('courses/index', $message ,true);
             
-            // View User list screen
+            // View Courses screen
             $this->load->view('master_page', ['content' => $content]);
         }
 
@@ -35,10 +35,10 @@
             $recordsTotal = count($this->Course_model->getCoursesSearch());
             $dataSearch = [
                 'name' => trim($this->input->post('name')),
-                'weekDay' => $this->input->post('weekDay'),
+                'weekDay' => trim($this->input->post('weekDay')),
                 'time' => date($this->input->post('time')),
-                'startDate' => $this->input->post('startDate'),
-                'endDate' => $this->input->post('endDate'),
+                'startDate' => date($this->input->post('startDate')),
+                'endDate' => date($this->input->post('endDate')),
                 'course' => $this->input->post('course'),
                 'event' => $this->input->post('event'),
             ];
@@ -199,7 +199,8 @@
         /**
          * Edit screen
          * 
-         * @param array error of data if any
+         * @param array message if any
+         * @param string id of profile
          */
         private function showEditView($id = '', $error = [])
         {
@@ -213,6 +214,11 @@
             $this->load->view('master_page', ['content' => $content]);
         }
 
+        /**
+         * Edit action
+         * 
+         * @param string id of profile
+         */
         public function edit($id = '')
         {
             $error = [];
@@ -271,47 +277,15 @@
                     $this->Course_model->updateCourse($dataCourse);
                     $this->db->trans_complete();
                     $name = $this->Course_model->getCourse(['id' => $id,])['name'];
-                    $error['course_message'] = lang('update_course') .' '. $name .' '. lang('success');
-                    $this->showEditView($id, $error);
+                    $message = lang('update_course') .' '. $name .' '. lang('success');
+                    $this->session->set_flashdata('message', $message);
+                    redirect('/Courses/edit/'.$id, 'location');
                 } catch (Exception $e) {
                     echo $e;
                     $this->db->trans_rollback();
-                }
-            } else if ($this->input->post('profileId_')) {
-                // Drawl input data
-                $employeeName = trim($this->input->post('fullname_'));
-                $courseName = trim($this->input->post('courseName_'));
-                $dataEmployee = [
-                    'profile_id' => trim($this->input->post('profileId_')),
-                    'course_id' => trim($this->input->post('courseId_')),
-                    'updated_user' => $this->session->userdata('loginId'),
-                    'created_user' => $this->session->userdata('loginId'),
-                ];
-
-                // Check data before add
-                $dataCheck = [
-                    'profileId' => $dataEmployee['profile_id'],
-                    'courseId' => $dataEmployee['course_id'],
-                ];
-                $dataError = $this->dataCheck($dataCheck);
-
-                // Return error if any
-                if ($dataError['flag']) {
-                    $this->showEditView($id, $dataError);
-
-                    return;
-                }
-                
-                // Add Employee to Course Detail
-                try {
-                    $this->db->trans_start();
-                    $this->Course_detail_model->addEmployee($dataEmployee);
-                    $this->db->trans_complete();
-                    $error['employee_message'] = lang('add_course_detail_1') .' '. $employeeName .' '. lang('add_course_detail_2') .' '. $courseName .' '. lang('success');
-                    $this->showEditView($id, $error);
-                } catch (Exception $e) {
-                    echo $e;
-                    $this->db->trans_rollback();
+                    $message = lang('update_course') .' '. $name .' '. lang('fail') . ' ' . lang('wrong');
+                    $this->session->set_flashdata('message', $message);
+                    redirect('/Courses/edit/'.$id, 'location');
                 }
             } else {
                 $this->showEditView($id);
@@ -357,13 +331,18 @@
                 $this->db->trans_start();
                 $this->Course_detail_model->addEmployee($dataEmployee);
                 $this->db->trans_complete();
+                $message = lang('add_course_detail_1') .' '. $employeeName .' '. lang('add_course_detail_2') .' '. $courseName .' '. lang('success');
+                $this->session->set_flashdata('message', $message);
                 echo json_encode([
                     'success' => true,
-                    'message'=> lang('add_course_detail_1') .' '. $employeeName .' '. lang('add_course_detail_2') .' '. $courseName .' '. lang('success') . '<br>',
+                    'message'=> $message,
                 ]);
             } catch (Exception $e) {
                 echo $e;
                 $this->db->trans_rollback();
+                $message = lang('add_course_detail_1') .' '. $employeeName .' '. lang('add_course_detail_2') .' '. $courseName .' '. lang('fail') . ' ' . lang('wrong');
+                $this->session->set_flashdata('message', $message);
+                redirect(current_url(), 'location');
             }
         }
 
@@ -387,6 +366,14 @@
                 return;
             }
             $data = $spreadsheet->getActiveSheet()->toArray($excelFile);
+            if ((count($data) === 1) || (count($data) === 0)) {
+                echo json_encode([
+                    'success' => false,
+                    'message'=> lang('UPLOAD008') . '<br>',
+                ]);
+
+                return;
+            }
             $error = [
                 'count' => 0,
                 'error' => '',
@@ -418,7 +405,7 @@
             $dataList = [];
             for ($i = 1; $i < count($data); $i++) {
                 $temp = [];
-                $temp['course_id'] = $this->input->post('courseId');
+                $temp['course_id'] = trim($this->input->post('courseId'));
                 $temp['profile_id'] = $this->Profile_model->getProfile(['employeeId' => (string)($data[$i][0]),])['id'];
                 $temp['updated_user'] = $this->session->userdata('loginId');
                 $temp['created_user'] = $this->session->userdata('loginId');
@@ -433,16 +420,20 @@
                 $this->Course_detail_model->updateEmployeeByUpload($dataUpdate);
                 $this->Course_detail_model->addEmployeeByUpload($dataList);
                 $this->db->trans_complete();
+                $message = lang('upload_employee_list');
+                $this->session->set_flashdata('message', $message);
                 echo json_encode([
                     'success' => true,
-                    'message'=> lang('upload_employee_list'),
+                    'message'=> $message,
                 ]);
             } catch (Exception $e) {
                 echo $e;
                 $this->db->trans_rollback();
+                $message = lang('upload_fail') . ' ' . lang('wrong');
+                $this->session->set_flashdata('message', $message);
                 echo json_encode([
                     'success' => false,
-                    'message'=> lang('upload_fail') . '<br>',
+                    'message'=> $message,
                 ]);
             }
         }
@@ -470,17 +461,20 @@
         /**
          * Add screen
          * 
-         * @param array error of data if any
+         * @param array message if any
          */
-        private function showAddView($error = [])
+        private function showAddView($message = [])
         {
             // Set data to view Add screen
-            $content = $this->load->view('courses/add', $error ,true);
+            $content = $this->load->view('courses/add', $message ,true);
             
             // View Add screen
             $this->load->view('master_page', ['content' => $content]);
         }
 
+        /**
+         * Add action
+         */
         public function add()
         {
             $error = [];
@@ -503,8 +497,8 @@
                 'name' => trim($this->input->post('name')),
                 'time' => date($this->input->post('time')),
                 'course_type' => $this->input->post('type'),
-                'start_date' => $this->input->post('startDate'),
-                'end_date' => $this->input->post('endDate'),
+                'start_date' => date($this->input->post('startDate')),
+                'end_date' => date($this->input->post('endDate')),
                 'weekdays' => $weekdays,
                 'updated_user' => $this->session->userdata('loginId'),
                 'created_user' => $this->session->userdata('loginId'),
@@ -544,6 +538,9 @@
             } catch (Exception $e) {
                 echo $e;
                 $this->db->trans_rollback();
+                $message = lang('add_course') .' '. lang('fail') . ' ' . lang('wrong');
+                $this->session->set_flashdata('message', $message);
+                redirect('/Courses/add', 'location');
             }
         }
 
@@ -552,24 +549,30 @@
          */
         public function deleteCourse()
         {
+            // Set up data to delete
+            $name = trim($this->input->post('name'));
+            $dataDelete = [
+                'id' => trim($this->input->post('id')),
+                'updateUser' => $this->session->userdata('loginId'),
+            ];
             // Delete Course
             try {
-                $name = trim($this->input->post('name'));
-                $dataDelete = [
-                    'id' => trim($this->input->post('id')),
-                    'updateUser' => $this->session->userdata('loginId'),
-                ];
                 $this->db->trans_start();
                 $this->Course_model->deleteCourse($dataDelete);
                 $this->db->trans_complete();
+                $message = lang('delete_course') .' '. $name .' '. lang('success');
+                $this->session->set_flashdata('message', $message);
                 header('Content-Type', 'application/json');
                 echo json_encode([
                     'success' => true,
-                    'message'=> lang('delete_course') .' '. $name .' '. lang('success'),
+                    'message'=> $message,
                 ]);
             } catch (Exception $e) {
                 echo $e;
                 $this->db->trans_rollback();
+                $message = lang('delete_course') .' '. $name .' '. lang('fail') . ' ' . lang('wrong');
+                $this->session->set_flashdata('message', $message);
+                redirect('/Courses', 'location');
             }
         }
 
@@ -578,25 +581,31 @@
          */
         public function deleteEmployee()
         {
+            // Set up data to delete
+            $dataDelete = [
+                'profileId' => trim($this->input->post('profileId')),
+                'courseId' => trim($this->input->post('courseId')),
+                'updateUser' => $this->session->userdata('loginId'),
+            ];
+            $name = $this->Profile_model->getProfile(['id' => $dataDelete['profileId'],])['name'];
             // Delete Employee
             try {
-                $dataDelete = [
-                    'profileId' => trim($this->input->post('profileId')),
-                    'courseId' => trim($this->input->post('courseId')),
-                    'updateUser' => $this->session->userdata('loginId'),
-                ];
-                $name = $this->Profile_model->getProfile(['id' => $dataDelete['profileId'],])['name'];
                 $this->db->trans_start();
                 $this->Course_detail_model->deleteEmployee($dataDelete);
                 $this->db->trans_complete();
+                $message = lang('delete_employee') .' '. $name .' '. lang('success');
+                $this->session->set_flashdata('message', $message);
                 header('Content-Type', 'application/json');
                 echo json_encode([
                     'success' => true,
-                    'message'=> lang('delete_employee') .' '. $name .' '. lang('success'),
+                    'message'=> $message,
                 ]);
             } catch (Exception $e) {
                 echo $e;
                 $this->db->trans_rollback();
+                $message = lang('delete_employee') .' '. $name .' '. lang('fail') . ' ' . lang('wrong');
+                $this->session->set_flashdata('message', $message);
+                redirect(current_url(), 'location');
             }
         }
     }

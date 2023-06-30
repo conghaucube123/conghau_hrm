@@ -2,15 +2,9 @@
     .list {
         border: #f1f1f1f1 2px solid;
         border-radius: 20px;
-        padding: 10px;
+        padding: 20px;
         margin-left: 30px;
         margin-right: 30px;
-    }
-    .table-container {
-        border: #f1f1f1f1 2px solid;
-        border-radius: 5px;
-        margin: 20px 10px;
-        padding: 20px;
     }
     .dataTables_filter { 
         display: none;
@@ -32,7 +26,7 @@
         margin-bottom: 30px;
     }
     .col-md-5 {
-        margin-bottom: 30px;
+        margin-bottom: 20px;
     }
     .col-md-8.error input {
         border-color: red;
@@ -62,32 +56,18 @@
         }
     }
 </style>
+
 <div class="list">
-<h3><?php echo lang('add_course'); ?></h3>
     <!-- Add course detail input -->
     <div class="add-course-detail">
+        <h3><?php echo lang('add_new_course'); ?></h3>
         <form class="form-horizontal form-label-left" role="form" action="add" method="post" onsubmit="return validate()">
-            <div class="row">
-                <div class="col-md-10 col-md-offset-1">
-                    <?php
-                        if (isset($message) && !empty($message)) {
-                            echo '
-                                <div class="form-group" id="message">        
-                                    <div class="alert alert-success alert-dismissible">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="close"><i class="fas fa-times"></i></button>
-                                        <strong><i class="fas fa-check"></i> '.$message.'</strong>
-                                    </div>
-                                </div>';
-                        }
-                    ?>
-                </div>
-            </div>
             <div class="form-group">
                 <div class="col-md-12 col-sm-12 col-xs-11" id="btn">
                     <div class="col-md-12 col-sm-7 col-xs-7" style="text-align: right;">
-                        <button type="button" class="btn btn-primary" style="color:#ffffff;" onclick="window.history.back();"><i class="fa fa-arrow-left"></i> <?php echo lang('back'); ?></button>
-                        <!-- <button type="button" class="btn btn-warning" style="color:#ffffff;"><i class="fas fa-upload"></i> <?php echo lang('upload'); ?></button> -->
-                        <button type="submit" class="btn btn-success" style="color:#ffffff;"><i class="fas fa-plus"></i> <?php echo lang('add'); ?></button>
+                        <button type="button" class="btn btn-info" style="color:#ffffff;" onclick="window.history.back();"><i class="fa fa-arrow-left"></i> <?php echo lang('back'); ?></button>
+                        <!-- <button type="button" class="btn btn-primary" style="color:#ffffff;"><i class="fas fa-upload"></i> <?php echo lang('upload'); ?></button> -->
+                        <button type="submit" class="btn btn-primary" style="color:#ffffff;"><i class="fas fa-plus"></i> <?php echo lang('add'); ?></button>
                     </div>
                 </div>
             </div>
@@ -134,7 +114,7 @@
                                 $i = 0;
                                 foreach ($weekDaysArr as $weekDay) {
                                     $checked = in_array($weekDay, $weekDaysr) ? 'checked = "checked"' : '';
-                                    echo '<label class="checkbox-inline"><input type="checkbox" id="'. $weekDaysName[$i] .'" name="weekDays[]" value="'. $weekDay .'"'. $checked .'> '. $weekDay .' </label>';
+                                    echo '<div class="checkbox checkbox-inline"><input type="checkbox" id="'. $weekDaysName[$i] .'" name="weekDays[]" value="'. $weekDay .'"'. $checked .'><label for="'. $weekDaysName[$i] .'"> '. $weekDay .' </label></div>';
                                     $i = $i + 1;
                                 }
                             } else {
@@ -142,7 +122,7 @@
                                 $weekDaysName = ['mon', 'tue', 'wed', 'thu', 'fri', 'sta', 'sun',];
                                 $i = 0;
                                 foreach ($weekDaysArr as $weekDay) {
-                                    echo '<label class="checkbox-inline"><input type="checkbox" id="'. $weekDaysName[$i] .'" name="weekDays[]" value="'. $weekDay .'"> '. $weekDay .' </label>';
+                                    echo '<div class="checkbox checkbox-inline"><input type="checkbox" id="'. $weekDaysName[$i] .'" name="weekDays[]" value="'. $weekDay .'"><label for="'. $weekDaysName[$i] .'"> '. $weekDay .' </label></div>';
                                     $i = $i + 1;
                                 }
                             }
@@ -153,14 +133,14 @@
                     <label class="control-label col-md-4 col-sm-5 col-xs-6"><?php echo lang('course_type_1'); ?><sup style="color: red;">*</sup></label>
                     <div class="col-md-8 col-sm-7 col-xs-7">
                         <span id="type"></span>
-                        <label class="radio-inline">
+                        <div class="checkbox radio-inline">
                             <input class="form-check-input" type="radio" id="course" name="type" value="1" <?php if(isset($courseTyper) && ($courseTyper === '1')) echo 'checked="checked"'; ?>>
-                            <?php echo lang('course_1'); ?>
-                        </label>
-                        <label class="radio-inline">
+                            <label for="course"><?php echo lang('course_1'); ?></label>
+                        </div>
+                        <div class="checkbox radio-inline">
                             <input class="form-check-input" type="radio" id="event" name="type" value="2" <?php if(isset($courseTyper) && ($courseTyper === '2')) echo 'checked="checked"'; ?>>
-                            <?php echo lang('event'); ?>
-                        </label>
+                            <label for="event"><?php echo lang('event'); ?></label>
+                        </div>
                         <div>
                             <span class="error-message">Error message</span>
                         </div>
@@ -172,7 +152,8 @@
 </div>
            
 <script>
-    $(function () {
+    $(function ()
+    {
         // Custom time input
         $('#timePicker').datetimepicker({
             useCurrent: false,
@@ -212,7 +193,8 @@
     const typeEle = document.getElementById('type');
 
     // Validate when user click "Add" button and have some error
-    function validate() {
+    function validate()
+    {
         let name = validateName();
         let type = validateType();
         if (!name || !type) {

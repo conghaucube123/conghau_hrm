@@ -9,7 +9,9 @@
     $lang["PASSWORD002"] = "Password must have at least 8 character.";
     $lang["PASSWORD003"] = "The maximum length of Password is 255 character.";
     $lang["PASSWORD004"] = "Password must contain at least 1 lowercase letter, 1 uppercase letter, 1 numeric digit, and 1 special character.";
-    $lang["PASSWORD004"] = "Confirm Password does not match Password.";
+    $lang["PASSWORD005"] = "Confirm Password does not match Password.";
+    $lang["PASSWORD006"] = "Please enter your new Password!";
+    $lang["PASSWORD007"] = "The password you entered is wrong!";
     // Full name
     $lang["FULLNAME001"] = "Please enter your Fullname!";
     $lang["FULLNAME002"] = "The maximum length of Fullname is 255 character.";
@@ -61,3 +63,4 @@
     $lang["UPLOAD005"] = "The file type is not right. It must be xls or xlsx or CSV.";
     $lang["UPLOAD006"] = "List error data is shown as below";
     $lang["UPLOAD007"] = "errors";
+    $lang["UPLOAD008"] = "Your file is empty. Please upload file have data!";
