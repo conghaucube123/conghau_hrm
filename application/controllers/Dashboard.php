@@ -35,7 +35,7 @@
                 7 => "Sunday"
             ];
             $days = [];
-            $date = '2023-06-29';
+            $date = date('Y-m-d');
             $begin = strtotime($date);
             $datetime = new DateTime($date);
             $today  = (int)$datetime->format('w');
