@@ -82,7 +82,7 @@
             </div>
             <div class="row">
                 <div class="col-md-2 col-md-offset-1">
-                    <div class="form-group">
+                    <div class="form-group" id="image-container">
                         <div id="image">
                             <img src="<?php echo base_url('images/user-2.png'); ?>" class="img-responsive" id="face-image">
                         </div>

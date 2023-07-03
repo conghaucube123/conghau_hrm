@@ -64,3 +64,4 @@
     $lang["UPLOAD006"] = "List error data is shown as below";
     $lang["UPLOAD007"] = "errors";
     $lang["UPLOAD008"] = "Your file is empty. Please upload file have data!";
+    $lang["UPLOAD009"] = "column";

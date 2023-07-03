@@ -31,7 +31,7 @@
         public function filterUserListData($data = [])
         {
             $draw = (int)($this->input->post("draw"));
-            $columnOrder = ['login_id', 'gender', 'name', 'email', 'employee_id', 'image','status',] ;
+            $columnOrder = ['employee_id', 'login_id', 'image','name',  'gender', 'email', 'status',] ;
             $order = $columnOrder[(int)$this->input->post('order[0][column]')];
             $dir = $this->input->post('order[0][dir]');
             $recordsTotal = count($this->Profile_model->getProfilesSearch());

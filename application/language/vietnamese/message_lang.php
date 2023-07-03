@@ -63,3 +63,4 @@
     $lang["UPLOAD006"] = "Danh sách dữ liệu bị lỗi được hiển thị như dưới đây";
     $lang["UPLOAD007"] = "lỗi";
     $lang["UPLOAD008"] = "Tập tin của bạn rỗng. Hãy tải tập tin có dữ liệu!";
+    $lang["UPLOAD009"] = "cột";

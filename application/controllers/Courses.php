@@ -94,7 +94,7 @@
 
                 return;
             }
-            $columnOrder = ['employee_id', 'name', 'email', 'birthday', 'address', 'mobile', 'gender',] ;
+            $columnOrder = ['employee_id', 'image', 'name', 'email', 'birthday', 'gender', 'mobile', 'address',] ;
             $order = $columnOrder[(int)$this->input->post('order[0][column]')];
             $dir = $this->input->post('order[0][dir]');
             $dataSearch = [
@@ -381,16 +381,16 @@
             for ($i = 1; $i < count($data); $i++) {
                 $checkEmp = explode('.', $data[$i][0]);
                 $emp = end($checkEmp);
-                $checkEma = explode('.', $data[$i][5]);
+                $checkEma = explode('.', $data[$i][2]);
                 $ema = end($checkEma);
                 if (($emp === 'tmp') && ($ema === 'tmp')) {
                     $error['error'] = $error['error'] . '&nbsp;&nbsp;&nbsp;&nbsp; - ' . lang('UPLOAD002') . ' ' . ($i + 2) . ':<br>' . '&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; + ' . lang('UPLOAD003')  . '<br>' . '&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; + ' . lang('UPLOAD004') . '<br>';
                     $error['count'] = $error['count'] + 2;
                 } else if ($emp === 'tmp') {
-                    $error['error'] = $error['error'] . '&nbsp;&nbsp;&nbsp;&nbsp; - ' . lang('UPLOAD002') . ' ' . ($i + 2) . ': ' . lang('UPLOAD003') . '<br>';
+                    $error['error'] = $error['error'] . '&nbsp;&nbsp;&nbsp;&nbsp; - ' . lang('UPLOAD002') . ' ' . ($i + 2) . ' - ' . lang('UPLOAD009') . ' 1' . ': ' . lang('UPLOAD003') . '<br>';
                     $error['count'] = $error['count'] + 1;
                 } else if ($ema === 'tmp') {
-                    $error['error'] = $error['error'] . '&nbsp;&nbsp;&nbsp;&nbsp; - ' . lang('UPLOAD002') . ' ' . ($i + 2) . ': ' . lang('UPLOAD004') . '<br>';
+                    $error['error'] = $error['error'] . '&nbsp;&nbsp;&nbsp;&nbsp; - ' . lang('UPLOAD002') . ' ' . ($i + 2) . ' - ' . lang('UPLOAD009') . ' 3' . ': ' . lang('UPLOAD004') . '<br>';
                     $error['count'] = $error['count'] + 1;
                 }
             }

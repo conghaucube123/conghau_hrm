@@ -126,7 +126,7 @@
                                 <?php echo form_error('loginId'); ?>
                             </div>
                             <div class="mb-3">
-                                <input type="password" class="form-control" id="password" name="password" onblur="validatePassword()" value="" placeholder="<?php echo lang('password'); ?>">
+                                <input type="password" class="form-control" id="password" name="password" onblur="validatePassword()" value="<?php if ($this->session->flashdata('passwordr')) {echo $this->session->flashdata('passwordr');} ?>" placeholder="<?php echo lang('password'); ?>">
                                 <span>Error message</span>
                                 <?php echo form_error('password'); ?>
                             </div>

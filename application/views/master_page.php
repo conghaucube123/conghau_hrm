@@ -237,7 +237,7 @@
             }
             .dashboard-toolbar {
                 min-height: 50px;
-                background-color: #dfdfdf;
+                background-color: #eeeeee;
                 align-items: center;
                 padding: 8px 27px;
                 position: fixed;
@@ -248,7 +248,7 @@
             }
             .nav_menu {
                 float: left;
-                background-color: #e8e8e8;
+                background-color: #eeeeee;
                 background-image: linear-gradient(45deg, #fafafa, #dbdbdb);
                 margin-bottom: 10px;
                 width: 100%;
@@ -273,7 +273,7 @@
                 display: inline;
             }
             .dropdown-toggle {
-                background-color: #dfdfdf;
+                background-color: #eeeeee;
                 border: none;
                 outline: none;
             }

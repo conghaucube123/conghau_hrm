@@ -79,8 +79,8 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-2 col-md-offset-1" id="image-container">
-                    <div class="form-group">
+                <div class="col-md-2 col-md-offset-1">
+                    <div class="form-group" id="image-container">
                         <div id="image">
                             <?php
                                 if (!empty($profile['image'])) {

@@ -49,6 +49,7 @@
             if (!$user) {
                 $message = lang('login_fail');
                 $this->session->set_flashdata('loginIdr', $this->input->post('loginId'));
+                $this->session->set_flashdata('passwordr', $this->input->post('password'));
                 $this->session->set_flashdata('message', $message);
                 redirect('/Authentication', 'location');
             } else {

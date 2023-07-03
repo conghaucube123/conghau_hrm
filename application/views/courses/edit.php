@@ -175,11 +175,11 @@
                     <th class="title"><?php echo lang('employee_id'); ?></th>
                     <th class="title"><?php echo lang('image'); ?></th>
                     <th class="title"><?php echo lang('fullname'); ?></th>
+                    <th class="title"><?php echo lang('email'); ?></th>
                     <th class="title"><?php echo lang('birthday'); ?></th>
                     <th class="title"><?php echo lang('gender'); ?></th>
-                    <th class="title"><?php echo lang('address'); ?></th>
-                    <th class="title"><?php echo lang('email'); ?></th>
                     <th class="title"><?php echo lang('mobile'); ?></th>
+                    <th class="title"><?php echo lang('address'); ?></th>
                     <th class="title"><?php echo lang('action') ?></th>
                 </tr>
                 </thead>
@@ -590,6 +590,10 @@
                     className: "dt-head-center",
                 },
                 {
+                    data: "email",
+                    className: "dt-head-center",
+                },
+                {
                     data: "birthday",
                     className: "dt-center",
                 },
@@ -598,16 +602,12 @@
                     className: "dt-center",
                 },
                 {
-                    data: "address",
-                    className: "dt-head-center",
-                },
-                {
-                    data: "email",
-                    className: "dt-head-center",
-                },
-                {
                     data: "mobile",
                     className: "dt-center",
+                },
+                {
+                    data: "address",
+                    className: "dt-head-center",
                 },
                 {
                     data: "profileId",

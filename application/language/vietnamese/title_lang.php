@@ -95,5 +95,5 @@
     $lang["excel_file"] = "Tập tin excel";
     $lang["choose_file"] = "Chọn tập tin";
     $lang["days"] = "Thứ";
-    $lang["times"] = "Số lần";
+    $lang["user_amount"] = "Người dùng";
     $lang["recent"] = "Gần đây";

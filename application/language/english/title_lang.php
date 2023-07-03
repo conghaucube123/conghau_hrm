@@ -95,5 +95,5 @@
     $lang["excel_file"] = "Excel file";
     $lang["choose_file"] = "Choose File";
     $lang["days"] = "Week days";
-    $lang["times"] = "Times";
+    $lang["user_amount"] = "Users";
     $lang["recent"] = "Recent";

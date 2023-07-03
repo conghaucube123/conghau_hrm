@@ -16,16 +16,12 @@
         width: 100%;
     }
     #gender {
-        float: left;
         margin-top: 50px;
-        margin-left: 50px;
         height: 600px;
         width: 600px;
     }
     #status {
-        float: right;
         margin-top: 50px;
-        margin-right: 50px;
         height: 600px;
         width: 600px;
     }
@@ -33,26 +29,24 @@
         height: 500px;
         width: 900px;
     }
-    .bottom-chart {
-        display: flex;
-        justify-content: center;
-    }
     @media (max-width: 1440px) {
         #gender {
-            margin-left: 50px;
             height: 400px;
             width: 400px;
         }
         #status {
-            margin-right: 50px;
             height: 400px;
             width: 400px;
         }
     }
     @media (max-width: 1024px) {
-        .dashboard-container {
+        .dashboard-container .row {
             display: flex;
             justify-content: center;
+        }
+        #recent-login {
+            height: 300px;
+            width: 600px;
         }
     }
 </style>
@@ -60,11 +54,19 @@
 <div class="dashboard">
     <div class="dashboard-container">
         <h3><?php echo lang('dashboard'); ?></h3>
-        <div id="gender"></div>
-        <div id="status"></div>
-        <div class="clearfix"></div>
-        <div class="bottom-chart">
-            <div id="recent-login"></div>
+        <div class="row">
+            <div class="col-md-5 col-md-offset-1">
+                <div id="gender"></div>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-5">
+                <div id="status"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" style="display: flex; justify-content: center;">
+                <div id="recent-login"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -193,7 +195,7 @@
         ],
         yAxis: [
             {
-                name: '<?php echo lang('times'); ?>',
+                name: '<?php echo lang('user_amount'); ?>',
                 nameLocation: 'end',
                 type: 'value',
                 axisLine: {
