@@ -55,6 +55,11 @@
     <div class="dashboard-container">
         <h3><?php echo lang('dashboard'); ?></h3>
         <div class="row">
+            <div class="col-md-12" style="text-align: right;">
+                <button type="button" id="export-dashboard-pdf" class="btn btn-danger" style="color:#ffffff;"><i class="fas fa-file-export"></i> PDF</button>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-5 col-md-offset-1">
                 <div id="gender"></div>
             </div>
@@ -72,6 +77,64 @@
 </div>
 
 <script>
+    $('#export-dashboard-pdf').on('click', function(event) {
+        // Get size of report page
+        var reportPageHeight = $('.dashboard').innerHeight();
+        var reportPageWidth = $('.dashboard').innerWidth();
+        
+        // Create a new canvas object that we will populate with all other canvas objects
+        var pdfCanvas = $('<canvas />').attr({
+            id: "canvaspdf",
+            width: reportPageWidth,
+            height: reportPageHeight
+        });
+        
+        // Keep track canvas position
+        var pdfctx = $(pdfCanvas)[0].getContext('2d');
+        var pdfctxX = 100;
+        var pdfctxY = 100;
+        var buffer = 200;
+        
+        // For each chart.js chart
+        $("canvas").each(function(index) {
+            // Get the chart height/width
+            var canvasHeight = $(this).innerHeight();
+            var canvasWidth = $(this).innerWidth();
+            
+            // Draw the chart into the new canvas
+            pdfctx.drawImage($(this)[0], pdfctxX, pdfctxY, canvasWidth, canvasHeight);
+            pdfctxX += canvasWidth + buffer;
+            
+            // Our report page is in a grid pattern so replicate that in the new canvas
+            if (index % 2 === 1) {
+                pdfctxX = 100;
+                pdfctxY += canvasHeight + buffer;
+            }
+        });
+        
+        // Create new pdf and add our new canvas as an image
+        var pdf = new jsPDF('l', 'pt', [reportPageWidth+1, reportPageHeight+1]);
+        pdf.addImage($(pdfCanvas)[0], 'PNG', 0, 0);
+        
+        // Download the pdf
+        pdf.save('Dashboard.pdf');
+    });
+
+    // window.jsPDF = window.jspdf.jsPDF;
+    // var docPDF = new jsPDF();
+    // $('#export-dashboard-pdf').on('click', function(event) {
+    //     var elementHTML = document.querySelector(".dashboard");
+    //     docPDF.html(elementHTML, {
+    //         callback: function(docPDF) {
+    //             docPDF.save('HTML Linuxhint web page.pdf');
+    //         },
+    //         x: 15,
+    //         y: 15,
+    //         width: 200,
+    //         windowWidth: $('.dashboard').innerWidth(),
+    //     });
+    // });
+
     var genderDom = document.getElementById('gender');
     var statusDom = document.getElementById('status');
     var recentLoginDom = document.getElementById('recent-login');

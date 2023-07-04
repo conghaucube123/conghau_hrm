@@ -23,6 +23,9 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
         <script src="<?php echo base_url(); ?>public/jquery-flexdatalist-2.3.0/jquery.flexdatalist.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.debug.js"></script>
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js "></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> -->
         <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
         
         <script src="https://cdn.datatables.net/plug-ins/1.13.4/i18n/vi.json"></script>
@@ -106,17 +109,14 @@
             }
             /* Sidebar */
             .dashboard-nav {
-                min-width: 238px;
+                /* min-width: 238px; */
                 position: fixed;
                 left: 0;
                 top: 0;
                 bottom: 0;
-                overflow: auto;
+                overflow: none;
                 background-color: #373193;
                 z-index: 1000;
-            }
-            .dashboard-compact .dashboard-nav {
-                display: none;
             }
             .dashboard-nav header {
                 min-height: 84px;
@@ -125,6 +125,7 @@
                 display: -webkit-flex;
                 display: -ms-flexbox;
                 display: flex;
+                overflow: none;
                 -webkit-box-pack: center;
                 -webkit-justify-content: center;
                 -ms-flex-pack: center;
@@ -153,7 +154,7 @@
             .dashboard-nav a {
                 color: #fff;
             }
-            .brand-logo {
+            /* .brand-logo {
                 font-family: "Nunito", sans-serif;
                 font-weight: bold;
                 font-size: 20px;
@@ -175,6 +176,11 @@
                 color: #d2d1d1;
                 font-size: 27px;
                 margin-right: 10px;
+            } */
+            .dashboard .dashboard-nav h4 {
+                color: #fff;
+                max-width: 238px;
+                text-align: center;
             }
             .nav-item-divider {
                 height: 1px;
@@ -217,6 +223,36 @@
             }
             .active {
                 background: rgba(0, 0, 0, 0.5);
+            }
+            .dashboard-compact .dashboard-nav {
+                max-width: 100px;
+                min-width: 100px;
+                text-align: center;
+            }
+            .dashboard-compact .dashboard-nav header {
+                display: flex;
+                justify-content: center;
+            }
+            .dashboard-compact .dashboard-nav header img {
+                width: 100%;
+            }
+            .dashboard-compact .dashboard-nav h4 {
+                display: none;
+            }
+            .dashboard-compact .dashboard-nav .dashboard-nav-list .dashboard-nav-item {
+                display: block;
+                text-align: center;
+                font-size: 0.85em;
+            }
+            .dashboard-compact .dashboard-nav .dashboard-nav-list .dashboard-nav-item span {
+                margin-left:  -55px;
+                display: block;
+            }
+            .dashboard-compact .dashboard-nav .dashboard-nav-list .dashboard-nav-item i {
+                margin-right:  0;
+                display: block;
+                font-size: 1.8em;
+                margin-bottom: 5px;
             }
             /* Header */
             .dashboard-app {
@@ -414,12 +450,13 @@
                 bottom: 0;
                 width: 100%;
             }
+            
             @media (min-width: 992px) {
                 .dashboard-app {
                     margin-left: 238px;
                 }
                 .dashboard-compact .dashboard-app {
-                    margin-left: 0;
+                    margin-left: 100px;
                 }
             }
             @media (max-width: 768px) {
@@ -443,6 +480,14 @@
                 .dashboard-nav.mobile-show {
                     display: block;
                 }
+                .dashboard .dashboard-nav h4 {
+                    color: #fff;
+                    font-size: 20px;
+                    margin-right: 10px;
+                    max-width: 992px;
+                    padding: 2px 20px;
+                    text-align: right;
+                }
             }
             @media (max-width: 992px) {
                 .dashboard-nav header .menu-toggle {
@@ -457,7 +502,7 @@
                     left: 238px;
                 }
                 .dashboard-compact .dashboard-toolbar {
-                    left: 0;
+                    left: 100px;
                 }
             }
         </style>
@@ -471,19 +516,20 @@
                         <img src="<?php echo base_url('images/icon-8.png'); ?>" alt="">
                     </a>
                 </header>
+                <h4>COURSE MANAGEMENT SYSTEM</h4>
                 <div class="nav-item-divider"></div>
                 <nav class="dashboard-nav-list">
                     <a href="<?php echo base_url('Dashboard'); ?>" class="dashboard-nav-item <?php if ($this->uri->segment('1') === 'Dashboard') echo 'active';?>">
                         <i class="fas fa-tachometer-alt"></i>
-                        <?php echo lang('dashboard'); ?>
+                        <span><?php echo lang('dashboard'); ?></span>
                     </a>
                     <a href="<?php echo base_url('User_list'); ?>" class="dashboard-nav-item <?php if ($this->uri->segment('1') === 'User_list') echo 'active';?>">
                         <i class="fas fa-list"></i>
-                        <?php echo lang('user_list'); ?>
+                        <span><?php echo lang('user_list'); ?></span>
                     </a>
                     <a href="<?php echo base_url('Courses'); ?>" class="dashboard-nav-item <?php if ($this->uri->segment('1') === 'Courses') echo 'active';?>">
                         <i class="fas fa-graduation-cap"></i>
-                        <?php echo lang('courses'); ?>
+                        <span><?php echo lang('courses'); ?></span>
                     </a>
                 </nav>
             </div>
