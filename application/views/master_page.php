@@ -114,13 +114,14 @@
                 left: 0;
                 top: 0;
                 bottom: 0;
-                overflow: none;
-                background-color: #373193;
+                overflow: auto;
+                background-color: #0e1c36;
                 z-index: 1000;
+                transition: all 2s;
             }
             .dashboard-nav header {
                 min-height: 84px;
-                padding: 8px 27px;
+                padding: 8px 30px;
                 display: -webkit-box;
                 display: -webkit-flex;
                 display: -ms-flexbox;
@@ -147,9 +148,6 @@
             }
             .dashboard-nav a:hover {
                 text-decoration: none;
-            }
-            .dashboard-nav {
-                background-color: #0e1c36;
             }
             .dashboard-nav a {
                 color: #fff;
@@ -178,6 +176,7 @@
                 margin-right: 10px;
             } */
             .dashboard .dashboard-nav h4 {
+                line-height: 2.5rem;
                 color: #fff;
                 max-width: 238px;
                 text-align: center;
@@ -228,13 +227,14 @@
                 max-width: 100px;
                 min-width: 100px;
                 text-align: center;
+                transition: all 2s;
             }
-            .dashboard-compact .dashboard-nav header {
+            .dashboard-compact .dashboard-nav .brand-logo {
                 display: flex;
                 justify-content: center;
             }
             .dashboard-compact .dashboard-nav header img {
-                width: 100%;
+                width: 150%;
             }
             .dashboard-compact .dashboard-nav h4 {
                 display: none;
@@ -245,7 +245,7 @@
                 font-size: 0.85em;
             }
             .dashboard-compact .dashboard-nav .dashboard-nav-list .dashboard-nav-item span {
-                margin-left:  -55px;
+                margin-left: -55px;
                 display: block;
             }
             .dashboard-compact .dashboard-nav .dashboard-nav-list .dashboard-nav-item i {
@@ -253,6 +253,12 @@
                 display: block;
                 font-size: 1.8em;
                 margin-bottom: 5px;
+            }
+            .dashboard-compact .dashboard-nav a[aria-expanded="false"]::before, .dashboard-compact .dashboard-nav a[aria-expanded="true"]::before {
+                top: auto;
+                bottom: 5px;
+                right: 50%;
+                transform: translateX(50%);
             }
             /* Header */
             .dashboard-app {

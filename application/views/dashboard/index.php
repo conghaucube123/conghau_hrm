@@ -91,9 +91,9 @@
         
         // Keep track canvas position
         var pdfctx = $(pdfCanvas)[0].getContext('2d');
-        var pdfctxX = 100;
-        var pdfctxY = 100;
-        var buffer = 200;
+        var pdfctxX = 150;
+        var pdfctxY = 150;
+        var buffer = 150;
         
         // For each chart.js chart
         $("canvas").each(function(index) {
@@ -107,13 +107,14 @@
             
             // Our report page is in a grid pattern so replicate that in the new canvas
             if (index % 2 === 1) {
-                pdfctxX = 100;
+                pdfctxX = 150;
                 pdfctxY += canvasHeight + buffer;
             }
         });
         
         // Create new pdf and add our new canvas as an image
-        var pdf = new jsPDF('l', 'pt', [reportPageWidth+1, reportPageHeight+1]);
+        var pdf = new jsPDF('portrait', 'pt', [reportPageWidth+100, reportPageHeight+100]);
+        pdf.text(50, 50, '<?php echo lang('dashboard'); ?>');
         pdf.addImage($(pdfCanvas)[0], 'PNG', 0, 0);
         
         // Download the pdf
@@ -146,6 +147,7 @@
     var recentLoginOption;
 
     genderOption = {
+        // backgroundColor: '#fff',
         title: {
             text: '<?php echo lang('user_gender'); ?>',
             left: 'center',
@@ -185,6 +187,7 @@
     genderOption && genderChart.setOption(genderOption);
 
     statusOption = {
+        // backgroundColor: '#fff',
         title: {
             text: '<?php echo lang('user_status'); ?>',
             left: 'center',
@@ -224,6 +227,7 @@
     statusOption && statusChart.setOption(statusOption);
 
     recentLoginOption = {
+        // backgroundColor: '#fff',
         title: {
             text: '<?php echo lang('user_login'); ?>',
             subtext: 'Today: <?php echo date("l, d/m/Y"); ?>',
