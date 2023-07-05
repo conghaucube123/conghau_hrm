@@ -24,7 +24,6 @@
         <script src="<?php echo base_url(); ?>public/jquery-flexdatalist-2.3.0/jquery.flexdatalist.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.debug.js"></script>
-        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js "></script> -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
         
@@ -109,7 +108,6 @@
             }
             /* Sidebar */
             .dashboard-nav {
-                /* min-width: 238px; */
                 position: fixed;
                 left: 0;
                 top: 0;
@@ -152,29 +150,6 @@
             .dashboard-nav a {
                 color: #fff;
             }
-            /* .brand-logo {
-                font-family: "Nunito", sans-serif;
-                font-weight: bold;
-                font-size: 20px;
-                display: -webkit-box;
-                display: -webkit-flex;
-                display: -ms-flexbox;
-                display: flex;
-                color: #515151;
-                -webkit-box-align: center;
-                -webkit-align-items: center;
-                -ms-flex-align: center;
-                align-items: center;
-            }
-            .brand-logo:focus, .brand-logo:active, .brand-logo:hover {
-                color: #dbdbdb;
-                text-decoration: none;
-            }
-            .brand-logo i {
-                color: #d2d1d1;
-                font-size: 27px;
-                margin-right: 10px;
-            } */
             .dashboard .dashboard-nav h4 {
                 line-height: 2.5rem;
                 color: #fff;
