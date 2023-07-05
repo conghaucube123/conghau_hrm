@@ -24,8 +24,8 @@
         <script src="<?php echo base_url(); ?>public/jquery-flexdatalist-2.3.0/jquery.flexdatalist.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.debug.js"></script>
-        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js "></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> -->
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js "></script> -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
         
         <script src="https://cdn.datatables.net/plug-ins/1.13.4/i18n/vi.json"></script>
@@ -249,7 +249,7 @@
                 display: block;
             }
             .dashboard-compact .dashboard-nav .dashboard-nav-list .dashboard-nav-item i {
-                margin-right:  0;
+                margin-right: 0;
                 display: block;
                 font-size: 1.8em;
                 margin-bottom: 5px;
@@ -490,7 +490,7 @@
                     color: #fff;
                     font-size: 20px;
                     margin-right: 10px;
-                    max-width: 992px;
+                    max-width: 2560px;
                     padding: 2px 20px;
                     text-align: right;
                 }
@@ -519,7 +519,7 @@
                 <header>
                     <div class="menu-toggle" style="color: #dfdfdf;"><i class="fas fa-bars"></i></div>
                     <a href="<?php echo base_url('Dashboard'); ?>" class="brand-logo">
-                        <img src="<?php echo base_url('images/icon-8.png'); ?>" alt="">
+                        <img src="<?php echo base_url('images/icon-9.png'); ?>" alt="">
                     </a>
                 </header>
                 <h4>COURSE MANAGEMENT SYSTEM</h4>
