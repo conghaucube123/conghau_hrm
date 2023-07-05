@@ -4,7 +4,7 @@
         display: table;
         clear: both;
     }
-    .dashboard {
+    .dashboard-contain {
         margin-left: 30px;
         margin-right: 30px;
     }
@@ -35,7 +35,7 @@
     }
 </style>
 
-<div class="dashboard">
+<div class="dashboard-contain">
     <div class="dashboard-container">
         <h3><?php echo lang('dashboard'); ?></h3>
         <div class="row">
@@ -47,7 +47,6 @@
             <div class="col-md-6">
                 <div id="gender"></div>
             </div>
-            <!-- <div class="col-md-2"></div> -->
             <div class="col-md-6">
                 <div id="status"></div>
             </div>

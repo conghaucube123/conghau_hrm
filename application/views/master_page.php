@@ -209,7 +209,7 @@
                 justify-content: center;
             }
             .dashboard-compact .dashboard-nav header img {
-                width: 150%;
+                width: 130%;
             }
             .dashboard-compact .dashboard-nav h4 {
                 display: none;
