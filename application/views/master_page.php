@@ -7,15 +7,16 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <!-- favicon -->
         <link rel="shortcut icon" type="image/png" href="<?php echo base_url('images/icon-9.png'); ?>"/>
+        <!-- CSS -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
         <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>public/jquery-flexdatalist-2.3.0/jquery.flexdatalist.min.css">
-
+        <!-- JS -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
@@ -26,7 +27,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.debug.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
-        
+        <!-- JSON -->
         <script src="https://cdn.datatables.net/plug-ins/1.13.4/i18n/vi.json"></script>
         <script src="https://cdn.datatables.net/plug-ins/1.13.4/i18n/en-GB.json"></script>
         <style>
@@ -562,7 +563,7 @@
                 <div id="snackbar"></div>
                 <footer>
                     <div class="footer-container">
-                        <span>Copyright © 2023 Pham Cong Hau.</span>
+                        <span>Copyright © 2023 by Pham Cong Hau.</span>
                     </div>
                 </footer>
             </div>

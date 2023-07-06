@@ -246,14 +246,14 @@
             }
         }
         if ($('#sun').is(":checked")) {
-            var sub = $('#sun').val();
+            var sun = $('#sun').val();
             if ((mon != '') || (tue != '') || (wed != '') || (thu != '') || (fri != '') || (sta != '')) {
                 weekDay = weekDay + ', ' + sun;
             } else {
                 weekDay = weekDay + sun;
             }
         }
-        
+        console.log(weekDay);
         if ($('#course').is(":checked")) {
             var course = $('#course').val();
         }
