@@ -15,7 +15,7 @@
         height: 100%;
         width: 100%;
     }
-    .dashboard-container .row {
+    .dashboard-container .row .col-md-6 {
         display: flex;
         justify-content: center;
     }
