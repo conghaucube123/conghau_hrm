@@ -5,8 +5,13 @@
     .form-input {
         border: #f1f1f1f1 2px solid;
         border-radius: 10px;
-        padding-top: 30px;
-        margin-top: 30px;
+        padding: 0px 20px 20px 20px;
+    }
+    .form-input form {
+        border: #ddd 1px solid;
+        border-radius: 5px;
+        padding: 20px;
+        margin-top: 20px;
     }
     .col-md-2 img {
         border-radius: 50%;
@@ -66,14 +71,12 @@
 
 <div class="body-container">
     <div class="form-input">
+        <div class="x-title">
+            <h3><?php echo lang('add_new_user'); ?></h3>
+        </div>
         <form role="form" action="add" method="post" enctype="multipart/form-data" onsubmit="return validate()">
             <div class="row">
-                <div class="col-md-10  col-md-offset-1">
-                    <h3><?php echo lang('add_new_user'); ?></h3>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-10 col-md-offset-1" style="text-align: right;">
+                <div class="col-md-12" style="text-align: right;">
                     <div class="form-group">
                         <button type="button" class="btn btn-info" style="color:#ffffff;" onclick="window.history.back();"><i class="fa fa-arrow-left"></i> <?php echo lang('back'); ?></button>
                         <button type="submit" class="btn btn-primary" style="color:#ffffff;"><i class="fas fa-plus"></i> <?php echo lang('add'); ?></button>
@@ -81,7 +84,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-2 col-md-offset-1">
+                <div class="col-md-2">
                     <div class="form-group" id="image-container">
                         <div id="image">
                             <img src="<?php echo base_url('images/user-2.png'); ?>" class="img-responsive" id="face-image">
@@ -105,7 +108,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <div class="form-group">
                         <label for="loginId"><?php echo lang('login_id_1'); ?><sup style="color: red;">*</sup>:</label>
                         <input type="text" class="form-control" id="loginId" name="loginId" value="<?php if (isset($loginIdr)) {echo $loginIdr;} ?>" onblur="validateLoginId()">
@@ -131,7 +134,7 @@
                         <input type="date" class="form-control" id="birthday" name="birthday" style="cursor: pointer;" value="<?php if (isset($birthdayr)) {echo $birthdayr;} ?>">
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <div class="form-group">
                         <label for="employeeId"><?php echo lang('employee_id_1'); ?><sup style="color: red;">*</sup>:</label>
                         <input type="text" class="form-control" id="employeeId" name="employeeId" value="<?php if (isset($employeeIdr)) {echo $employeeIdr;} ?>" onblur="validateEmployeeId()">
@@ -187,7 +190,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-2 col-md-offset-1"></div>
+                <div class="col-md-2"></div>
                 <div class="col-md-2">
                     <div class="form-group">   
                         <label><?php echo lang('gender_1'); ?>:</label>     
@@ -203,7 +206,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <div class="form-group">   
                         <label><?php echo lang('status_1'); ?>:</label>  
                         <div class="">
@@ -218,7 +221,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <div class="form-group">
                         <label for="departmentId"><?php echo lang('department'); ?><sup style="color: red;">*</sup>:</label>
                         <select class="form-control" id="departmentId" name="departmentId" style="cursor: pointer;" onblur="validateDepartmentId()">
@@ -238,8 +241,8 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-2 col-md-offset-1"></div>
-                <div class="col-md-4">
+                <div class="col-md-2"></div>
+                <div class="col-md-5">
                     <div class="form-group">
                         <label for="mobile"><?php echo lang('mobile_1'); ?>:</label>          
                         <input type="text" class="form-control" id="mobile" name="mobile" value="<?php if (isset($mobiler)) {echo $mobiler;} ?>" onblur="validateMobile()">
@@ -251,7 +254,7 @@
                         <span>Error message</span>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <div class="form-group">
                         <label for="probation-date"><?php echo lang('probation_date'); ?>:</label>          
                         <input type="date" class="form-control" id="probation-date" name="probationDate" style="cursor: pointer;" value="<?php if (isset($probationDater)) {echo $probationDater;} ?>">
@@ -263,8 +266,8 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-2 col-md-offset-1"></div>
-                <div class="col-md-8">
+                <div class="col-md-2"></div>
+                <div class="col-md-10">
                     <div class="form-group">
                         <label for="address"><?php echo lang('address_1'); ?>:</label>          
                         <textarea class="form-control" id="address" name="address" rows="3" onblur="validateAddress()"><?php if (isset($addressr)) {echo $addressr;} ?></textarea>

@@ -7,7 +7,7 @@
         border: #f1f1f1f1 2px solid;
         border-radius: 10px;
         margin-top: 30px;
-        padding: 20px;
+        padding: 0px 20px 20px 20px;
     }
     .add {
         float: right;
@@ -289,7 +289,7 @@
             fixedHeader: true,
             scrollCollapse: true,
             scrollY: "700px",
-            scrollX: "100%", 
+            "scrollX": true, 
             language: {
                 url: languageUrl,
             },

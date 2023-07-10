@@ -9,26 +9,30 @@
     .form-input {
         border: #f1f1f1f1 2px solid;
         border-radius: 10px;
-        padding-top: 30px;
-        padding-left: 50px;
-        margin-top: 30px;
+        padding: 0px 20px 20px 20px;
     }
-    #left-container {
+    .form-input form {
+        border: #ddd 1px solid;
+        border-radius: 5px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+    /* #left-container {
         margin-right: 50px;
-    }
+    } */
     #image-container #image,
     #image-container #upload {
         display: flex;
         justify-content: center;
     }
-    .col-md-3 img {
+    .col-md-4 img {
         border-radius: 50%;
         height: 200px;
         width: 200px; 
     }
     .custom-file {
         text-align: center;
-        width: 200px;
+        width: 300px;
     }
     .form-group.error input {
         border-color: red;
@@ -47,7 +51,7 @@
         form {
             margin: 0px 30px;
         }
-        .col-md-3 img {
+        .col-md-4 img {
             height: 250px;
             width: 250px; 
         }
@@ -61,7 +65,7 @@
         }
     }
     @media (max-width: 425px) {
-        .col-md-3 img {
+        .col-md-4 img {
             height: 150px;
             width: 150px; 
         }
@@ -73,14 +77,12 @@
 
 <div class="body-container">
     <div class="form-input">
+        <div class="x-title">
+            <h3><?php echo lang('user_profile'); ?></h3>
+        </div>
         <form role="form" action="<?php echo $this->uri->segment('3'); ?>" method="post" enctype="multipart/form-data" onsubmit="return validate()">
             <div class="row">
-                <div class="col-md-11">
-                    <h3><?php echo lang('user_info'); ?></h3>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-11" style="text-align: right; margin-left: 50px;">
+                <div class="col-md-12" style="text-align: right;">
                     <div class="form-group">
                         <button type="button" class="btn btn-info" style="color:#ffffff;" onclick="window.history.back();"><i class="fa fa-arrow-left"></i> <?php echo lang('back'); ?></button>
                         <button type="submit" class="btn btn-primary" style="color:#ffffff;"><i class="far fa-save"></i> <?php echo lang('save'); ?></button>
@@ -89,7 +91,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-3" id="left-container">
+                <div class="col-md-4" id="left-container">
                     <div class="form-group" id="image-container">
                         <div id="image">
                             <?php
@@ -268,8 +270,8 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-3"></div>
-                <div class="col-md-8" style="margin-left: 50px;">
+                <div class="col-md-4"></div>
+                <div class="col-md-8">
                     <div class="form-group">
                         <label for="address"><?php echo lang('address_1'); ?>:</label>          
                         <textarea class="form-control" id="address" name="address" rows="3" onblur="validateAddress()"><?php if (isset($addressr)) {echo $addressr;} else {echo $profile['address'];} ?></textarea>

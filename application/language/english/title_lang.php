@@ -10,16 +10,18 @@
     $lang["vietnamese"] = "Vietnamese";
     $lang["forgot_password"] = "Forgot password";
     // Header
-    $lang["user_info"] = "User Information";
-    $lang["add_new_user"] = "Add User";
-    $lang["course_info"] = "Course Information";
+    $lang["user_info"] = "Update User";
+    $lang["add_new_user"] = "New User";
+    $lang["course_info"] = "Update Course";
     $lang["employee_list"] = "Employee List";
-    $lang["add_new_course"] = "Add Course";
-    $lang["add_employee"] = "Add Employee";
+    $lang["add_new_course"] = "New Course";
+    $lang["add_employee"] = "New Employee";
     $lang["upload_employee_list"] = "Upload Employee List";
     $lang["user_gender"] = "User Gender";
     $lang["user_status"] = "User Status";
     $lang["user_login"] = "User Login In Week";
+    $lang["user_profile"] = "Profile";
+    $lang["user_master"] = "User";
     // Button
     $lang["login"] = "Login";
     $lang["search"] = "Search";

@@ -10,8 +10,8 @@
     }
     .dashboard-container {
         border: #f1f1f1f1 2px solid;
-        border-radius: 20px;
-        padding: 20px;
+        border-radius: 10px;
+        padding: 0px 20px 20px 20px;
         height: 100%;
         width: 100%;
     }

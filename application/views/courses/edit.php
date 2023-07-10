@@ -1,25 +1,25 @@
 <style>
     .list {
-        border: #f1f1f1f1 3px solid;
-        border-radius: 20px;
-        padding: 20px;
+        border: #f1f1f1f1 2px solid;
+        border-radius: 10px;
+        padding: 0px 20px 20px 20px;
         margin-left: 30px;
         margin-right: 30px;
     }
     .course-detail {
-        border: #f1f1f1f1 2px solid;
+        border: #ddd 1px solid;
         border-radius: 5px;
         margin: 20px 0px;
-        padding: 10px;
+        padding: 20px;
     }
     #success-message {
         display: none;
     }
     .table-container {
-        border: #f1f1f1f1 2px solid;
+        border: #ddd 1px solid;
         border-radius: 5px;
         margin: 20px 0px;
-        padding: 20px;
+        padding: 10px 20px 20px 20px;
     }
     .dataTables_filter { 
         display: none;
@@ -72,7 +72,9 @@
 </style>
 
 <div class="list">
-    <h3><?php echo lang('course_info'); ?></h3>
+    <div class="x-title">
+        <h3><?php echo lang('course_info'); ?></h3>
+    </div>
     <!-- Course detail input -->
     <div class="course-detail">
         <form id="course-info" class="form-horizontal form-label-left" role="form" action="<?php echo $this->uri->segment('3'); ?>" method="post" onsubmit="return validateCourse()">
@@ -545,7 +547,7 @@
         var employeeTable = $('#employeeTable').DataTable({
             fixedHeader: true,
             scrollCollapse: true,
-            scrollX: "100%", 
+            "scrollX": true, 
             language: {
                 url: languageUrl,
             },

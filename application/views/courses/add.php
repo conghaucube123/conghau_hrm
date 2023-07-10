@@ -1,10 +1,16 @@
 <style>
     .list {
         border: #f1f1f1f1 2px solid;
-        border-radius: 20px;
-        padding: 20px;
+        border-radius: 10px;
+        padding: 0px 20px 20px 20px;
         margin-left: 30px;
         margin-right: 30px;
+    }
+    .add-course-detail {
+        border: #ddd 1px solid;
+        border-radius: 5px;
+        padding: 20px;
+        margin-top: 20px;
     }
     .dataTables_filter { 
         display: none;
@@ -58,9 +64,11 @@
 </style>
 
 <div class="list">
+    <div class="x-title">
+        <h3><?php echo lang('add_new_course'); ?></h3>
+    </div>
     <!-- Add course detail input -->
     <div class="add-course-detail">
-        <h3><?php echo lang('add_new_course'); ?></h3>
         <form class="form-horizontal form-label-left" role="form" action="add" method="post" onsubmit="return validate()">
             <div class="form-group">
                 <div class="col-md-12 col-sm-12 col-xs-11" id="btn">

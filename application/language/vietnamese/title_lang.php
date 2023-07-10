@@ -10,9 +10,9 @@
     $lang["vietnamese"] = "Tiếng Việt";
     $lang["forgot_password"] = "Quên mật khẩu";
     // Header
-    $lang["user_info"] = "Thông Tin Người Dùng";
+    $lang["user_info"] = "Chỉnh Sửa Người Dùng";
     $lang["add_new_user"] = "Thêm Người Dùng";
-    $lang["course_info"] = "Thông Tin Khóa Học";
+    $lang["course_info"] = "Chỉnh Sửa Khóa Học";
     $lang["employee_list"] = "Danh Sách Nhân Viên";
     $lang["add_new_course"] = "Thêm Khóa Học";
     $lang["add_employee"] = "Thêm Nhân Viên";
@@ -20,6 +20,8 @@
     $lang["user_gender"] = "Giới Tính Người Dùng";
     $lang["user_status"] = "Trạng Thái Người Dùng";
     $lang["user_login"] = "Số Người Dùng Đăng Nhập Trong Tuần";
+    $lang["user_profile"] = "Hồ Sơ";
+    $lang["user_master"] = "Người Dùng";
     // Button
     $lang["login"] = "Đăng nhập";
     $lang["search"] = "Tìm kiếm";

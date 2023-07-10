@@ -198,6 +198,7 @@
             }
             .active {
                 background: rgba(0, 0, 0, 0.5);
+                border-left: #eeeeee 3px solid;
             }
             .dashboard-compact .dashboard-nav {
                 max-width: 100px;
@@ -275,15 +276,33 @@
             .nav {
                 display: inline;
             }
-            .dashboard-toolbar .navbar-right{
+            .dashboard-toolbar .navbar-left {
+                /* border: #000 1px solid; */
+                width: 50%;
+            }
+            .dashboard-toolbar .navbar-left .breadcrumb {
+                background-color: #eeeeee;
+                margin: 0;
+            }
+            .dashboard-toolbar .navbar-left .breadcrumb a {
+                color: #0e1c36;
+                font-size: 1.8rem;
+                font-weight: 700;
+                text-decoration: none;
+            }
+            .dashboard-toolbar .navbar-left .breadcrumb a:hover,
+            .dashboard-toolbar .navbar-left .breadcrumb a:active {
+                color: #6c757d;
+            }
+            .dashboard-toolbar .navbar-right {
                 margin: 0;
                 float: right;
             }
-            .navbar-right{
+            .navbar-right {
                 padding-top: 10px;
                 margin-right: 0;
             }
-            .navbar-right >ul >li {
+            .navbar-right > ul > li {
                 margin-left: 20px;
             }
             .navbar-right ul li {
@@ -519,7 +538,10 @@
                 <header class='dashboard-toolbar'>
                     <div class="nav-menu">
                         <nav>
-                            <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+                            <div class="nav navbar-left">
+                                <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+                                <ul class="breadcrumb"></ul>
+                            </div>
                             <ul class="nav navbar-nav navbar-right">
                                 <li class="dropdown">
                                     <button class="dropdown-toggle" type="button" data-toggle="dropdown">
@@ -587,6 +609,24 @@
                     $this->session->set_flashdata('message', "");
                 }
             ?>
+            var first = $("nav a.active span").first().text().trim();
+            var secondLevel = '<?php echo $this->uri->segment('2'); ?>';
+            if (secondLevel != '') {
+                if (first === '') {
+                    first = '<?php echo lang('user_master'); ?>';
+                    $('.breadcrumb').append('<li><a href="<?php echo current_url(); ?>">'+ first +'</a></li>');
+                } else {
+                    $('.breadcrumb').append('<li><a href="<?php echo base_url($this->uri->segment('1')); ?>">'+ first +'</a></li>');
+                }
+                var second = $(".x-title h3").first().text().trim();
+                $('.breadcrumb').append('<li><a href="<?php echo current_url(); ?>">'+ second +'</a></li>');
+            } else {
+                $('.breadcrumb').append('<li><a href="<?php echo current_url(); ?>">'+ first +'</a></li>');
+            }
+            
+            // if (second != '') {
+            //     $('.breadcrumb').append('<li><a href="<?php echo base_url(); ?>/'+ first + second +'">'+ first +'</a></li>');
+            // }
             $(".menu-toggle").click(function () {
                 if (mobileScreen.matches) {
                     $(".dashboard-nav").toggleClass("mobile-show");
