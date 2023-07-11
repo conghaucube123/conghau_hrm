@@ -283,6 +283,7 @@
             .dashboard-toolbar .navbar-left .breadcrumb {
                 background-color: #eeeeee;
                 margin: 0;
+				margin-left: 50px;
             }
             .dashboard-toolbar .navbar-left .breadcrumb a {
                 color: #0e1c36;
