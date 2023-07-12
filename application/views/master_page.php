@@ -288,7 +288,7 @@
             .dashboard-toolbar .navbar-left .breadcrumb a {
                 color: #0e1c36;
                 font-size: 1.8rem;
-                font-weight: 700;
+                font-weight: 600;
                 text-decoration: none;
             }
             .dashboard-toolbar .navbar-left .breadcrumb a:hover,
